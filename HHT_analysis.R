@@ -6,7 +6,9 @@ cor.test(raw.data$LAudio_PTA,raw.data$LHHT_PTA)
 
 
 r.regline <- lm(RAudio_PTA~RHHT_PTA, data=raw.data)
+summary(r.regline)
 l.regline <- lm(LAudio_PTA~LHHT_PTA, data=raw.data)
+summary(l.regline)
 plot(raw.data$RAudio_PTA,raw.data$RHHT_PTA)
 abline(r.regline)
 plot(raw.data$LAudio_PTA,raw.data$LHHT_PTA)
