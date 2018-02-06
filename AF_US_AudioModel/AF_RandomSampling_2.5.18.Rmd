@@ -1,0 +1,48 @@
+---
+title: "AF_RandomSampling_2.5.18"
+author: "cmosle1"
+date: "2/5/2018"
+output: html_document
+---
+
+```{r}
+#data import. 
+
+AFdata<- read.csv("~/Desktop/Modeling Literature/AF_US_UNI_AllSubsSurvey+Audio_2.5.18.csv")
+head(AFdata)
+View(AFdata)
+```
+
+## Relevant Questions
+ #q0001- Participant ID
+ #q0002- Gender; 1=F
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
+ #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
+ #q0010- household income
+ #q0012- do health benefits cover cost of a hearing test
+ #q0013- do health benefits cover cost of hearing aids
+ #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than               one race
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
+ #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
+ #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
+ #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
+ #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ 
+ 
+```{r}
+#Creating first random sample of 250, named "samp1"
+set.seed(44)
+samp1<- sample(1:nrow(AFdata), 250)
+AFdata[samp1,]
+
+#Figure out how to get another sample of 250 that only includes people not in this one to compare
+```
+
+```{r}
+#Beginning first MI model
+
+```
+
