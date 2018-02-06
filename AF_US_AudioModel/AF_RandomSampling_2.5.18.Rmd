@@ -41,8 +41,4 @@ AFdata[samp1,]
 #Figure out how to get another sample of 250 that only includes people not in this one to compare
 ```
 
-```{r}
-#Beginning first MI model
-
-```
 
