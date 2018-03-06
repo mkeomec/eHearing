@@ -10,7 +10,9 @@ df_comb <- read.csv(filename,  header=TRUE)
 basename(filename)
          
 total.table <- table(df_comb$country_id)
+total.table
 testing.table <- with(df_comb,table(testing,country_id))
+testing.table
 
 race.table<- with(df_comb,table(q0014,country_id))
 race.table<- with(df_comb,table(q0014,country_id,testing))
