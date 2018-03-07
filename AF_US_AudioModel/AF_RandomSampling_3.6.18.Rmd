@@ -1,0 +1,132 @@
+---
+title: "AF_RandomSampling_2.5.18"
+author: "cmosle1"
+date: "2/5/2018"
+output: html_document
+---
+
+```{r}
+#data import. 
+
+AFdata<- read.csv("~/Desktop/Modeling Literature/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings="#NULL!")
+head(AFdata)
+View(AFdata)
+
+```
+
+# Need to: change "90NR" and "9999" to "95"
+```{r}
+
+#issue with 90NR --> 95 change: the HHT doesn't measure other thresholds if 90NR at 1000Hz (first threshold tested). Should we set all thresholds to 95 or leave them missing? ---> SOLUTION: SET ALL >90 to 95
+
+#Changing 90NR (aka 9999) and Conventional audio thresholds that are > 90 to 95
+
+#Left Ear
+AFdata$L5<-AFdata$L500
+AFdata$L5[AFdata$L500 > 90] <- 95
+AFdata$L1<-AFdata$L1000
+AFdata$L1[AFdata$L1000 > 90] <- 95
+AFdata$L2<-AFdata$L2000
+AFdata$L2[AFdata$L2000 > 90] <- 95
+AFdata$L4<-AFdata$L4000
+AFdata$L4[AFdata$L4000 > 90] <- 95
+
+
+#Right Ear
+AFdata$R5<-AFdata$R500
+AFdata$R5[AFdata$R500 > 90] <- 95
+AFdata$R1<-AFdata$R1000
+AFdata$R1[AFdata$R1000 > 90] <- 95
+AFdata$R2<-AFdata$R2000
+AFdata$R2[AFdata$R2000 > 90] <- 95
+AFdata$R4<-AFdata$R4000
+AFdata$R4[AFdata$R4000 > 90] <- 95
+
+#At 8000Hz
+AFdata$L8<-AFdata$L8000
+AFdata$L8[AFdata$L8000 > 90] <- 95
+AFdata$R8<-AFdata$R8000
+AFdata$R8[AFdata$R8000 > 90] <- 95
+
+#colnames(AFdata)[1000:1020]
+
+#Moving forward, use "L5" --> "R8" instead of "L500"--> "R8000" because the new variables have the 95dB cutoff and 90NR replacements.
+
+```
+
+
+# Creating PTA Values (L, R, & BE)
+```{r}
+# Calculating PTA in each ear
+
+#colnames(AFdata[,1000:1021])
+AFdata$LPTA <- apply(AFdata[,1011:1014], 1, mean, na.rm=T)
+AFdata$RPTA <- apply(AFdata[,1015:1018], 1, mean, na.rm=T)
+
+
+AFdata$LPTA[is.nan(AFdata$LPTA)]  <- NA
+AFdata$RPTA[is.nan(AFdata$RPTA)]  <- NA
+
+#Now can calculate BEPTA (PTA in better ear)
+AFdata$BEPTA<- ifelse((!is.na(AFdata$RPTA) & AFdata$RPTA <= AFdata$LPTA) | is.na(AFdata$LPTA),
+                      AFdata$RPTA, AFdata$LPTA)
+#To Check
+#AFdata[c(1,2,257),c("RPTA", "LPTA", "BEPTA")] 
+#is.na(AFdata$BEPTA)
+#AFdata[which(is.na(AFdata$RPTA)), c("RPTA", "LPTA", "BEPTA")]
+
+```
+
+
+#Categorizing BEPTA by degree of hearing loss (per ASHA Standards)
+```{r}
+#ASHA Standards: Normal: -10-25; Mild: 26-40; Moderate: 41-55; Moderately-Severe: 56-70; Severe: 71-90; Profound: >90
+
+AFdata$HLdeg <- cut(AFdata$BEPTA,
+                  breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
+                  labels=c("Normal", "Mild", "Moderate", "Moderately-Severe", "Severe", "Profound"))
+
+```
+
+
+
+# Relevant Questions
+ #q0001- Participant ID
+ #q0002- Gender; 1=F
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
+ #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
+ #q0010- household income
+ #q0012- do health benefits cover cost of a hearing test
+ #q0013- do health benefits cover cost of hearing aids
+ #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than               one race
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
+ #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
+ #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
+ #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
+ #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ #q0046- Pathway question: 1-3= No hearing problem; 4= Hearing loss, no treatment; 5= Hearing loss + treatment
+ 
+ 
+```{r}
+#Creating first random sample of 250, named "samp1"
+set.seed(44)
+samp1<- sample(1:nrow(AFdata), 250)
+AFdata[samp1,]
+
+#Figure out how to get another sample of 250 that only includes people not in this one to compare
+```
+
+
+```{r}
+#Installing Amelia package for MI. 
+#Cite as James Honaker, Gary King, Matthew Blackwell (2011). Amelia II: A Program for Missing Data. Journal of Statistical Software, 45(7), 1-47. URL http://www.jstatsoft.org/v45/i07/.
+
+install.packages("Amelia")
+library(Amelia)
+
+?amelia
+```
+

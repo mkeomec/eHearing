@@ -8,10 +8,47 @@ output: html_document
 ```{r}
 #data import. 
 
-AFdata<- read.csv("~/Desktop/Modeling Literature/AF_US_UNI_AllSubsSurvey+Audio_2.5.18.csv")
+AFdata<- read.csv("~/Desktop/Modeling Literature/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv")
 head(AFdata)
 View(AFdata)
 ```
+
+Need to: change "90NR" and "9999" to "95" & calculate Better ear PTA (BEPTA)
+```{r}
+#Changing 90NR (aka 9999) to 95
+#At 500Hz
+
+AFdata$L500<- ifelse(AFdata$L500 == 9999, 95, AFdata$L500)
+AFdata$R500<- ifelse(AFdata$R500 == 9999, 95, AFdata$R500)
+
+#At 1000Hz
+AFdata$L1000<- ifelse(AFdata$L1000 == 9999, 95, AFdata$L1000)
+AFdata$R1000<- ifelse(AFdata$R1000 == 9999, 95, AFdata$R1000)
+
+#At 2000Hz
+AFdata$L2000<- ifelse(AFdata$L2000 == 9999, 95, AFdata$L2000)
+AFdata$R2000<- ifelse(AFdata$R2000 == 9999, 95, AFdata$R2000)
+
+#At 4000Hz
+AFdata$L4000<- ifelse(AFdata$L4000 == 9999, 95, AFdata$L4000)
+AFdata$R4000<- ifelse(AFdata$R4000 == 9999, 95, AFdata$R4000)
+
+#issue with 90NR --> 95 change: the HHT doesn't measure other thresholds if 90NR at 1000Hz (first threshold tested). Should we set all thresholds to 95 or leave them missing?
+
+
+# Calculating Better ear PTA (BEPTA)
+
+#First need to deal with missing values
+
+
+#Now can calculate individual ear PTAs and BEPTA
+AFdata$LPTA<- mean(AFdata$L500, AFdata$L1000, AFdata$L2000, AFdata$L4000)
+AFdata$RPTA<- mean(AFdata$R500, AFdata$R1000, AFdata$R2000, AFdata$R4000)
+AFdata$BEPTA<- ifelse(AFdata$RPTA < AFdata$LPTA, AFdata$RPTA, AFdata$LPTA)
+
+```
+
+
 
 ## Relevant Questions
  #q0001- Participant ID
@@ -30,6 +67,7 @@ View(AFdata)
  #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
  #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
  #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ #q0046- Pathway question: 1-3= No hearing problem; 4= Hearing loss, no treatment; 5= Hearing loss + treatment
  
  
 ```{r}
@@ -41,4 +79,14 @@ AFdata[samp1,]
 #Figure out how to get another sample of 250 that only includes people not in this one to compare
 ```
 
+
+```{r}
+#Installing Amelia package for MI. 
+#Cite as James Honaker, Gary King, Matthew Blackwell (2011). Amelia II: A Program for Missing Data. Journal of Statistical Software, 45(7), 1-47. URL http://www.jstatsoft.org/v45/i07/.
+
+install.packages("Amelia")
+library(Amelia)
+
+?amelia
+```
 
