@@ -91,6 +91,14 @@ AFdata$HLdeg <- cut(AFdata$BEPTA,
                   breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
                   labels=c("0", "1", "2", "3", "4", "5"))
 
+
+#just practicing dplyr
+AFdata2<-tbl_df(AFdata)
+deg2<-AFdata2$HLdeg
+lut <- c("0" = "Normal", "1" ="Mild", "2" ="Moderate", "3" = "Moderately-Severe", "4" = "Severe", "5" = "Profound")
+AFdata2$HLdegnom <- lut[deg2]
+glimpse(AFdata2)
+
 ggplot(data=AFdata, aes(x=HLdeg)) + geom_bar()
 ggplot(data=AFdata, aes(x=q0046, y=BEPTA)) + geom_boxplot(aes(group=q0046)) + labs(title="Hearing loss by pathway", x="q0046", y="PTA in Better Hearing Ear")
 
@@ -110,7 +118,7 @@ ggplot(data=AFdata, aes(x=q0046, y=BEPTA)) + geom_boxplot(aes(group=q0046)) + la
  #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than               one race
  #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
  #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
- #q0030_0015- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0030_0017- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
  #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
  #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
  #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
@@ -126,7 +134,8 @@ set.seed(44)
 temp_samp1<- na.omit(sample(1:nrow(AFdata), 250))
 samp1<-AFdata[temp_samp1, c("q0002", "q0003", "q0005", "q0008", "q0010", "q0012", "q0013", "q0014", "q0032", "q0034", "q0036", "q0042", "q0046", "BEPTA")]
 summary(samp1)
-
+#did not include the q0030_00XX variables because they have no variance (see plot below)
+ggplot(AFdata, aes(q0030_0015)) + geom_histogram() 
 
 
 #Omitting missing PTA and degree of hearing loss variables
@@ -139,6 +148,9 @@ ggplot(data=usesamp1, aes(x=BEPTA)) + geom_histogram()
 
 
 #Figure out how to get another sample of 250 that only includes people not in this one to compare
+#Find out how to do a dataset split then randomize the split
+
+
 ```
 
 
@@ -149,6 +161,7 @@ ggplot(data=usesamp1, aes(x=BEPTA)) + geom_histogram()
  #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
  #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
  #q0010- household income
+ 
  #q0012- do health benefits cover cost of a hearing test
  #q0013- do health benefits cover cost of hearing aids
  #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than               one race
@@ -170,12 +183,14 @@ ggplot(data=usesamp1, aes(x=BEPTA)) + geom_histogram()
 
 #install.packages("Amelia")
 #update.packages("Amelia")
-#library('Amelia')
+library('Amelia')
 require('Amelia')
 
 summary(lm(BEPTA ~ q0002 + q0003 + q0005 + q0008 + q0010 + q0012 + q0013 + q0014 + q0032 + q0034 + q0036 + q0042 + q0046,
-data = usesamp1))
-imp1<- amelia(usesamp1, m=5, cs= "q0046")
+data = usesamp1)) #looking at a comparison between listwise deletion with regression vs. using amelia for imputation
+
+
+imp1<- amelia(usesamp1, m=5, cs= "q0046", p2s=2)
 summary(imp1)
 
 hist(imp1$imputations[[4]]$q0002, col="grey", border="white")
@@ -184,17 +199,66 @@ hist(imp1$imputations[[4]]$q0046, col="grey", border="white")
 
 
 
-summary(lm(BEPTA ~ q0002 + q0003 + q0005 + q0008 + q0010 + q0012 + q0013 + q0014 + q0032 + q0034 + q0036 + q0042 + q0046,
-data = usesamp1))
 imp2<- amelia(usesamp1, m=5, cs= "q0046", noms = c("q0014"))
               
 summary(imp2)
+plot(imp2, which.vars= 1:5)
+#imputed values are in red, observed in black, non-missing are blue
+#q0005 *marital status* is a bad predictor for this model. Also q0010--household income
 
-table(imp2$imputations[[5]]$q0003)
+plot(imp2, which.vars= 6:8)
+#take out q0012 & 0013--do health benefits cover cost of hearing test/aids
 
+plot(imp2, which.vars= 10:13)
+#variable 9 (q0032) wouldn't run for some reason
+
+usesamp1$q0032
+#plot(imp2, 9,col=c("red", "black"), scaled=F, lwd=1)
+#Not sure why this won't run... Has only one N/A and the count is the same as q0036... it's binary, but so are some of the other variables
+
+cov(usesamp1)
+#assessing covariances to improve model fit 
+```
+
+Trying the analysis again, with more imputations and taking out variables mentioned above
+```{r}
+samp2<-AFdata[temp_samp1, c("q0002", "q0003", "q0008", "q0010", "q0014", "q0034", "q0036", "q0042", "q0046", "BEPTA")]
+summary(samp2)
+
+usesamp2<- drop_na(samp2, c("BEPTA"))
+summary(usesamp2)
+
+
+imp3<- amelia(usesamp2, m=8, cs= "q0046", noms = c("q0014"))
+summary(imp3)
+
+plot(imp3, which.vars = 1:4) 
+plot(imp3, which.vars = 5:9)
+
+overimpute(imp3, var = "q0010")
+overimpute(imp3, var = "BEPTA") #Not too bad!
+missmap(imp3) #plots missingness by observation
 
 ```
 
+#Taking a look at the distributions of my variables
 
+```{r}
+ggplot(AFdata, aes(q0002)) + geom_histogram() #dichotomous, so distribution can't be normal
+ggplot(AFdata, aes(q0003)) + geom_histogram() #slightly right-skewed
+ggplot(AFdata, aes(q0005)) + geom_histogram()
+ggplot(AFdata, aes(q0008)) + geom_histogram() #Collapse and dichotomize? Remove completely due to non-representative nature of the in-person sample? Remove this
+ggplot(AFdata, aes(q0010)) + geom_histogram() 
+ggplot(AFdata, aes(q0012)) + geom_histogram() 
+ggplot(AFdata, aes(q0013)) + geom_histogram() #dichotomize? bimodal distribution
+ggplot(AFdata, aes(q0014)) + geom_histogram() #race question... very little variance. Dichotomize
+table(AFdata$q0014)
+ggplot(AFdata, aes(q0032)) + geom_histogram() 
+ggplot(AFdata, aes(q0034)) + geom_histogram() 
+ggplot(AFdata, aes(q0036)) + geom_histogram()
+ggplot(AFdata, aes(q0042)) + geom_histogram()
+ggplot(AFdata, aes(q0046)) + geom_histogram()
 
+```
 
+#NEXT STEP: Take an iterative approach by adding one variable at a time to create a more parsimonious model (Forward Selection Model)
