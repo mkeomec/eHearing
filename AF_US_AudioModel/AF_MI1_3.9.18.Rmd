@@ -397,7 +397,7 @@ summary(testimp1)
 overimpute(testimp1, var='BEPTA')
 overimpute(imp17, var='BEPTA')
 
-#This isn't nearly as good a fit.. Going to try adding in 
+#This isn't nearly as good a fit.. Going to try adding in tinnitus
 
 testsamp2<- testgroup[,c('q0002', 'q0003', 'q0032','q0034', 'q0036','q0046', 'BEPTA')]
 testimp2<- amelia(testsamp2, m=8) 
@@ -406,6 +406,14 @@ overimpute(testimp2, var='BEPTA') #Much better!
 overimpute(testimp1, var='BEPTA')
 
 
+testsamp3<- testgroup[,c('q0032','q0034', 'q0036','q0046', 'BEPTA')]
+testimp3<- amelia(testsamp3, m=8) 
+summary(testimp3)
+overimpute(testimp3, var='BEPTA')
 
+testsamp4<- testgroup[,c('q0002', 'q0032','q0034', 'q0036','q0046', 'BEPTA')]
+testimp4<- amelia(testsamp4, m=8) 
+summary(testimp4)
+overimpute(testimp4, var='BEPTA')
 ```
 
