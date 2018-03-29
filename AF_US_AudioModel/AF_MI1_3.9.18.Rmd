@@ -15,6 +15,7 @@ AFdata<- read.csv("~/Desktop/Modeling Literature/AF_US_UNI_AllSubsSurvey+Audio_2
 library("dplyr")
 library("tidyr")
 library("ggplot2")
+library('caTools')
 
 
 ```
@@ -147,10 +148,15 @@ ggplot(data=usesamp1, aes(x=BEPTA)) + geom_histogram()
 #ggplot(data=temp_samp1, aes(x=HLdeg)) + geom_bar()
 
 
-#Figure out how to get another sample of 250 that only includes people not in this one to compare
-#Find out how to do a dataset split then randomize the split
 
-
+#Split samples here. MI Group has no missing PTA variables
+set.seed(44) 
+samp.split1 <- sample.split(AFdata$q0001, SplitRatio = .5)
+temp_migroup <- subset(AFdata, samp.split1 == TRUE)
+testgroup  <- subset(AFdata, samp.split1 == FALSE)
+migroup<-drop_na(temp_migroup, c('BEPTA'))
+dim(migroup)
+#is.na(migroup$BEPTA)
 ```
 
 
@@ -261,4 +267,145 @@ ggplot(AFdata, aes(q0046)) + geom_histogram()
 
 ```
 
-#NEXT STEP: Take an iterative approach by adding one variable at a time to create a more parsimonious model (Forward Selection Model)
+#Taking an iterative approach by adding one variable at a time to create a more parsimonious model (Forward Selection Model)
+
+```{r}
+#Can't do the iterative model without missing values.
+
+FSsamp1<-migroup[, c("q0010", "BEPTA")]
+imp4<- amelia(FSsamp1, m=8)
+summary(imp4)
+overimpute(imp4, var = "BEPTA") 
+#Household income isn't a good predictor this time
+
+
+FSsamp2<- migroup[,c("q0002", "q0003", "q0010", "BEPTA")]
+imp5<- amelia(FSsamp2, m=8)
+summary(imp5)
+overimpute(imp5, var = "BEPTA")
+#Adding age (q0002) and gender (q0003) made it a little better.
+
+FSsamp3<- migroup[, c('q0002', 'q0003', 'q0010', 'q0013', 'BEPTA')]
+imp6<- amelia(FSsamp3, m=8)
+summary(imp6)
+overimpute(imp6, var='BEPTA')
+#Adding coverage for hearing tests makes model worse
+
+
+FSsamp4<- migroup[,c('q0002', 'q0003', 'q0010', 'q0012', 'q0032', 'BEPTA')]
+imp7<- amelia(FSsamp4, m=8)
+summary(imp7)
+overimpute(imp7, var='BEPTA')
+#Now adding self-reported hearing loss (q0032). This helped a lot!
+
+FSsamp5<- migroup[,c('q0002', 'q0003', 'q0010', 'q0012', 'q0032', 'q0034','BEPTA')]
+imp8<- amelia(FSsamp5, m=8)
+summary(imp8)
+overimpute(imp8, var='BEPTA')
+#Adding tinnitus (q0034)
+
+FSsamp6<-migroup[,c('q0002', 'q0003', 'q0010', 'q0012', 'q0032', 'q0034', 'q0036','BEPTA')]
+imp9<- amelia(FSsamp6, m=8)
+summary(imp9)
+overimpute(imp9, var='BEPTA')
+#Adding history of occupational noise exposure
+
+FSsamp7 <-migroup[,c('q0002', 'q0003', 'q0010', 'q0012', 'q0032', 'q0034', 'q0036','q0042','BEPTA')]
+imp10<- amelia(FSsamp7, m=8)
+summary(imp10)
+overimpute(imp10, var='BEPTA')
+#Adding another self-report of hearing loss
+
+FSsamp8 <-migroup[,c('q0002', 'q0003', 'q0010', 'q0012', 'q0032', 'q0034', 'q0036','q0042','q0046', 'BEPTA')]
+imp11<- amelia(FSsamp8, m=8)
+summary(imp11)
+overimpute(imp11, var='BEPTA')
+#Now by q0046--pathway quesiton
+
+
+#Now trying this again, but only adding the ones that seemed to best predict BEPTA
+
+FSsamp9<- migroup[, c('q0002', 'q0003', 'q0032', 'q0034', 'q0036','q0042','q0046', 'BEPTA')]
+imp12<- amelia(FSsamp9, m=8)
+summary(imp12)
+overimpute(imp12, var='BEPTA')
+
+#Taking out tinnitus (q0034)
+FSsamp10<- migroup[, c('q0002', 'q0003', 'q0032','q0036','q0042','q0046', 'BEPTA')]
+imp13<- amelia(FSsamp10, m=8)
+summary(imp13)
+overimpute(imp13, var='BEPTA')
+#Subjectively better without tinnitus question
+
+#Taking out gender (q0002)
+FSsamp11<- migroup[, c('q0003', 'q0032','q0036','q0042','q0046', 'BEPTA')]
+imp14<- amelia(FSsamp11, m=8)
+summary(imp14)
+
+
+overimpute(imp14, var='BEPTA')
+overimpute(imp13, var='BEPTA')
+#Subjectively better WITH gender question
+
+#Putting gender back in, taking out deaf or hearing difficulty question (q0032)
+FSsamp12<- migroup[, c('q0002', 'q0003', 'q0036','q0042','q0046', 'BEPTA')]
+imp15<- amelia(FSsamp12, m=8)
+summary(imp15)
+
+overimpute(imp15, var='BEPTA')
+overimpute(imp13, var='BEPTA')
+#Subjectively better WITH q0032
+
+
+#Putting q0032 back in, taking out occupational noise exposure question (q0036)
+FSsamp13<- migroup[, c('q0002', 'q0003', 'q0032', 'q0042','q0046', 'BEPTA')]
+imp16<- amelia(FSsamp13, m=8)
+summary(imp16)
+
+overimpute(imp16, var='BEPTA')
+overimpute(imp13, var='BEPTA')
+#Hard to call... I think we should leave noise exposure in
+
+#Putting q0036 back in, taking out do you have a hearing problem now (q0042)
+FSsamp14<- migroup[, c('q0002', 'q0003', 'q0032', 'q0036','q0046', 'BEPTA')]
+imp17<- amelia(FSsamp14, m=8)
+summary(imp17)
+overimpute(imp17, var='BEPTA')
+overimpute(imp16, var='BEPTA') #suggests that we should DEF leave noise exposure in
+overimpute(imp13, var='BEPTA')
+#IMP17 is the best so far
+
+
+
+#Leaving q0036 out, also taking out pathway question (q0046)
+FSsamp15<- migroup[, c('q0002', 'q0003', 'q0032', 'q0036', 'BEPTA')]
+imp18<- amelia(FSsamp15, m=8)
+summary(imp15)
+overimpute(imp17, var='BEPTA')
+overimpute(imp13, var='BEPTA') 
+overimpute(imp18, var='BEPTA')
+#Taking out q0046 made it MUCH worse! Def leave it in. IMP17 is the best based on this approach
+
+```
+
+#Applying best MI model to other half of sample
+
+```{r}
+testsamp1<- testgroup[,c('q0002', 'q0003', 'q0032', 'q0036','q0046', 'BEPTA')]
+testimp1<- amelia(testsamp1, m=8) #Got a warning that some observations are completely missing and that they won't be included in final model
+summary(testimp1)
+overimpute(testimp1, var='BEPTA')
+overimpute(imp17, var='BEPTA')
+
+#This isn't nearly as good a fit.. Going to try adding in 
+
+testsamp2<- testgroup[,c('q0002', 'q0003', 'q0032','q0034', 'q0036','q0046', 'BEPTA')]
+testimp2<- amelia(testsamp2, m=8) 
+summary(testimp2)
+overimpute(testimp2, var='BEPTA') #Much better!
+overimpute(testimp1, var='BEPTA')
+
+
+
+```
+
