@@ -77,11 +77,33 @@ AFdata$BEPTA<- ifelse((!is.na(AFdata$RPTA) & AFdata$RPTA <= AFdata$LPTA) | is.na
 #AFdata[which(is.na(AFdata$RPTA)), c("RPTA", "LPTA", "BEPTA")]
 ```
 
-
+# Relevant Questions
+ #q0001- Participant ID
+ #q0002- Gender; 1=F
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
+ #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
+ #q0010- household income
+ #q0012- do health benefits cover cost of a hearing test
+ #q0013- do health benefits cover cost of hearing aids
+ #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than               one race
+ #q0018_0001- In general, would you say your health is: 1= Exellent, 2= Very Good, 3= Good, 4=Fair, 5=Poor
+ #q0020_0001- In general would you say your quality of life is: 1=Excellent, 5 = Poor
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
+ #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
+ #q0030_0017- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
+ #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
+ #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
+ #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ #q0046- Pathway question: 1-3= No hearing problem; 4= Hearing loss, no treatment; 5= Hearing loss + treatment
+ 
 
 #Reducing size of dataset
 ```{r}
-abbrev.data <- select(AFdata , c("q0002", "q0003", "q0005", "q0008", "q0010", "q0012", "q0013", "q0014", "q0032", "q0034", "q0036", "q0042", "q0046", "BEPTA"))
+abbrev.data <- select(AFdata , c("q0002", "q0003", "q0005", "q0008", "q0010", "q0012", "q0013", "q0014", "q0018_0001", "q0020_0001","q0032", "q0034", "q0036", "q0042", "q0046", "BEPTA"))
+
+AFdata$q0020_0001
 ```
 
 
@@ -92,10 +114,10 @@ AFcorr1
 ```
 
 ## Variables significantly correlated with BEPTA include:
-   q0002  q0003 q0008 q0012  q0013 q0032 q0042  q0046
+   q0002 q0003 q0008 q0012 q0013 q0018_0001 q0032 q0042 q0046
 
 ## Ranked by magnitude of correlation
-   q0046, q0032, q0042, q0003, q0013, q0012, q0002, q0008
+   q0046, q0032, q0042, q0003, q0013, q0012, q0002, q0018_0001, q0008
 
 
 
@@ -117,7 +139,7 @@ identical(migroup, mangroup) #Shows me that this group is different from the one
 
 #Parsing down split sample
 ```{r}
-man.group1 <- select(mangroup , c("q0002", "q0003", "q0005", "q0008", "q0010", "q0012", "q0013", "q0014", "q0032", "q0034", "q0036", "q0042", "q0046", "BEPTA"))
+man.group1 <- select(mangroup , c("q0002", "q0003", "q0005", "q0008", "q0010", "q0012", "q0013", "q0014", "q0018_0001", "q0032", "q0034", "q0036", "q0042", "q0046", "BEPTA"))
 
 ```
 
