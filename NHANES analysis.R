@@ -45,9 +45,26 @@ age_gender_table_11$Var2 <- as.numeric(age_gender_table_11$Var2)
 
 # For 2011 dataset with audio
 table_dataset_11 <- matrix(c(sum(age_gender_table_11$Freq[age_gender_table_11$Var2>=65&age_gender_table_11$Var1==2]),sum(age_gender_table_11$Freq[age_gender_table_11$Var2>=65&age_gender_table_11$Var1==1]),sum(age_gender_table_11$Freq[age_gender_table_11$Var2<65&age_gender_table_11$Var1==2]),sum(age_gender_table_11$Freq[age_gender_table_11$Var2<65&age_gender_table_11$Var1==1])),ncol=2,byrow=TRUE)
+
+# Add new column 1 if <65 and 2 if >= 65 years of age
+
+dataset_11$RIDAGEYR<65
+dataset_11$age[dataset_11$RIDAGEYR<65]=1
+dataset_11$age[dataset_11$RIDAGEYR>=65]=2
+
+dataset_11_count <- dataset_11 %>% count(AUQ054,RIAGENDR,age)
+
+grid.table(dataset_11_count)
+
 colnames(table_dataset_11) <- c('Male','Female')
 rownames(table_dataset_11) <- c('65+','<65')
 grid.table(addmargins(table_dataset_11))
+
+
+
+
+
+
 
 
 
