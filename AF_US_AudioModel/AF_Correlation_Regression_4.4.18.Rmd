@@ -133,7 +133,7 @@ mangroup<-drop_na(temp_mangroup, c('BEPTA'))
 dim(mangroup) # n=248
 dim(testgroup) # n=261
 is.na(mangroup$BEPTA) #No missing PTA values
-identical(migroup, mangroup) #Shows me that this group is different from the one I used in my Amelia model
+identical(testgroup, mangroup) #Shows me that this group is different from the one I used in my Amelia model
 ```
 
 
@@ -146,11 +146,105 @@ man.group1 <- select(mangroup , c("q0002", "q0003", "q0005", "q0008", "q0010", "
 # Starting forward selection process (FS)
 
 ```{r}
+
+## Variables significantly correlated with BEPTA include:
+   #q0002 q0003 q0008 q0012 q0013 q0018_0001 q0032 q0042 q0046
+
+## Ranked by magnitude of correlation
+   #q0046, q0032, q0042, q0003, q0013, q0012, q0002, q0018_0001, q0008
+
+
 fs1<- lm(BEPTA~q0046, data=man.group1)
 summary(fs1)
 
 fs2<- lm(BEPTA ~ q0046 + q0032, data=man.group1)
 summary(fs2)
 
+fs3<- lm(BEPTA ~ q0046 + q0032 + q0042, data=man.group1) #higher R-squared but q0042 is not significant
+summary(fs3)
+
+fs4<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003, data=man.group1) #higher R-squared and all are significant
+summary(fs4)
+
+fs5<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013, data=man.group1) #higher R-squared but q0013 isn't significant
+summary(fs5)
+
+fs6<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012, data=man.group1) #higher R-squared but q0012 isn't significant (essentially the same as having q0013 in)
+summary(fs6)
+
+fs7<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002, data=man.group1) #higher R-squared but q0013, q0012, or q0002 aren't significant.Not substantially increasing R-squared
+summary(fs7)
+
+fs8<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002 + q0018_0001, data=man.group1) #higher R-squared but q0013, q0012, or q0002 aren't significant.Not substantially increasing R-squared
+summary(fs8)
+
+fs9<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002 + q0018_0001 + q0008, data=man.group1) #higher R-squared but q0013, q0012, or q0002 aren't significant.Not substantially increasing R-squared
+summary(fs9)
 ```
+
+
+# Backward selection process
+
+```{r}
+## Variables significantly correlated with BEPTA include:
+   #q0002 q0003 q0008 q0012 q0013 q0018_0001 q0032 q0042 q0046
+
+## Ranked by magnitude of correlation
+   #q0046, q0032, q0042, q0003, q0013, q0012, q0002, q0018_0001, q0008
+
+bs1<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002 + q0018_0001 + q0008, data=man.group1) 
+summary(bs1)
+
+bs2<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0012 + q0002 + q0018_0001 + q0008, data=man.group1) 
+summary(bs2) #very slight increase in R-squared value when q0013 deleted (.5587 --> .5588)
+
+bs3<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0002 + q0018_0001 + q0008, data=man.group1) 
+summary(bs3) #reduction in R-squared value when q0012 deleted (.5588 --> .5553)
+
+bs3<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0018_0001 + q0008, data=man.group1) 
+summary(bs3) #no change in R-squared value when q0002 deleted compared to bs3 (still .5553)
+
+bs4<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0008, data=man.group1) 
+summary(bs4) #slight improvement in R-squared compared to bs3 when q0018_0001 deleted (.5553 --> .5565)
+
+bs5<- lm(BEPTA ~ q0046 + q0032 + q0003 + q0008, data=man.group1) 
+summary(bs5) #slight reduction in R-squared with q0042 deleted (.5565 --> .5525)
+
+bs6<- lm(BEPTA ~ q0046 + q0032 + q0003, data=man.group1) 
+summary(bs6) #slight reduction in R-squared with q0008 deleted (.5525 --> .5416)
+
+bs7<- lm(BEPTA ~ q0046 + q0032, data=man.group1) 
+summary(bs7) #large reduction with q0003 removed (.5416 --> .4385)
+
+bs8<- lm(BEPTA ~ q0046, data=man.group1) 
+summary(bs8) #large reduction with q0032 removed (.4385 --> .3739)
+
+```
+
+
+# Generating best model based on fs and bs processes
+```{r}
+bm1<- lm(BEPTA ~ q0046 + q0032 + q0003 + q0012, data=man.group1)
+summary(bm1)
+
+bm2<- lm(BEPTA ~ q0046 + q0032 + q0003 + q0012 + q0008, data=man.group1)
+summary(bm2)
+
+bm3<- lm(BEPTA ~ q0046 + q0032 + q0003 + q0008, data=man.group1)
+summary(bm3)
+
+bm4<- lm(BEPTA ~ q0046 + q0032 + q0003 + q0008 + q0042, data=man.group1)
+summary(bm4)
+
+bm5<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0012 + q0002 + q0008, data=man.group1) 
+summary(bm5) #Best model I could create so far. Took the best model from the backward selection process and took out q0018, which caused an improvement in R-square when it was removed. I also tried taking out q0002, but it reduced the R-squared.
+
+```
+
+#Testing best model fit in non-observed group (testgroup)--TGmodels
+```{r}
+tgmod1<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0012 + q0002 + q0008, data=testgroup) 
+summary(tgmod1) #R-squared is higher for this one compared to the manipulation group used for bs & fs
+```
+
 

@@ -117,6 +117,8 @@ ggplot(data=AFdata, aes(x=q0046, y=BEPTA)) + geom_boxplot(aes(group=q0046)) + la
  #q0012- do health benefits cover cost of a hearing test
  #q0013- do health benefits cover cost of hearing aids
  #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than               one race
+ #q0018_0001- In general, would you say your health is: 1= Exellent, 2= Very Good, 3= Good, 4=Fair, 5=Poor
+ #q0020_0001- In general would you say your quality of life is: 1=Excellent, 5 = Poor
  #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
  #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
  #q0030_0017- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
