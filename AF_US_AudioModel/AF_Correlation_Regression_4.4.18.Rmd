@@ -241,10 +241,84 @@ summary(bm5) #Best model I could create so far. Took the best model from the bac
 
 ```
 
-#Testing best model fit in non-observed group (testgroup)--TGmodels
+#Testing best model fit from the manipulated group on non-observed group (testgroup)--TGmodels
 ```{r}
 tgmod1<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0012 + q0002 + q0008, data=testgroup) 
 summary(tgmod1) #R-squared is higher for this one compared to the manipulation group used for bs & fs
 ```
 
+
+#Same forward selection process (FSel), but for test group
+```{r}
+test.group1 <- select(testgroup , c("q0002", "q0003", "q0005", "q0008", "q0010", "q0012", "q0013", "q0014", "q0018_0001", "q0032", "q0034", "q0036", "q0042", "q0046", "BEPTA"))
+
+
+## Variables significantly correlated with BEPTA include:
+   #q0002 q0003 q0008 q0012 q0013 q0018_0001 q0032 q0042 q0046
+
+## Ranked by magnitude of correlation
+   #q0046, q0032, q0042, q0003, q0013, q0012, q0002, q0018_0001, q0008
+
+
+fsel1<- lm(BEPTA~q0046, data=test.group1)
+summary(fsel1) #Rsquared = .418
+
+fsel2<- lm(BEPTA ~ q0046 + q0032, data=test.group1)
+summary(fsel2) #Rsquared= .504
+
+fsel3<- lm(BEPTA ~ q0046 + q0032 + q0042, data=test.group1) #q0042 doesn't add to model; also not-significant
+summary(fsel3)
+
+fsel4<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003, data=test.group1) 
+summary(fsel4)
+
+fsel5<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013, data=test.group1) 
+summary(fsel5)
+
+fsel6<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012, data=test.group1) #lower R-squared with q0012 added
+summary(fsel6)
+
+fsel7<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002, data=test.group1) #adding q0002 improved r-squared
+summary(fsel7)
+
+fsel8<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002 + q0018_0001, data=test.group1) #q0018 reduces r-squared
+summary(fsel8)
+
+fsel9<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002 + q0018_0001 + q0008, data=test.group1) #slight improvement with q0008 added
+summary(fsel9)
+
+```
+
+
+
+#Same backward selection process (BSel), but for test group
+```{r}
+bsel1<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0013 + q0012 + q0002 + q0018_0001 + q0008, data=test.group1) 
+summary(bsel1)
+
+bsel2<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0012 + q0002 + q0018_0001 + q0008, data=test.group1) 
+summary(bsel2) #slight reductiion in r-squared with q0013 removed
+
+bsel3<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0002 + q0018_0001 + q0008, data=test.group1) #minimal change in r-square (-.001)
+summary(bsel3) 
+
+bsel3<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0018_0001 + q0008, data=test.group1) #slight reduction in r-square
+summary(bsel3) 
+
+bsel4<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0008, data=test.group1) #increase in r-square with q0018 removed
+summary(bsel4) 
+
+bsel5<- lm(BEPTA ~ q0046 + q0032 + q0003 + q0008, data=test.group1) #slight increase in r-square with q0042 removed
+summary(bsel5) 
+
+bsel6<- lm(BEPTA ~ q0046 + q0032 + q0003, data=test.group1) #slight reduction with q0008 removed
+summary(bsel6) 
+
+bsel7<- lm(BEPTA ~ q0046 + q0032, data=test.group1) #large reduction with q0003 removed
+summary(bsel7) 
+
+bsel8<- lm(BEPTA ~ q0046, data=test.group1) #large reduction with q0032 removed
+summary(bsel8) 
+
+```
 
