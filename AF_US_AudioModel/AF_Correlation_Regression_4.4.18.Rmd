@@ -322,3 +322,27 @@ summary(bsel8)
 
 ```
 
+
+
+#Visualizing the models
+```{r}
+# Grab residuals
+tgres <- residuals(tgmod1)
+# Convert to DataFrame for gglpot
+tgres <- as.data.frame(tgres)
+ggplot(tgres,aes(tgres)) +  geom_histogram(fill='blue',alpha=0.5)
+
+
+mgres <- residuals(bm5)
+mgres <- as.data.frame(mgres)
+ggplot(mgres,aes(mgres)) +  geom_histogram(fill='red',alpha=0.5)
+
+plot(tgmod1)
+plot(bm5)
+```
+
+# Predicting BEPTA in non-test group
+```{r}
+#file:///Users/C_Mo4/Desktop/Modeling%20Literature/R_code/Linear%20Regression%20Lecture.html
+```
+
