@@ -17,6 +17,7 @@ library("tidyr")
 library("ggplot2")
 library('caTools')
 library("Hmisc")
+
 ```
 
 
@@ -127,9 +128,9 @@ AFcorr1
 ```{r}
 set.seed(4) 
 samp.split1 <- sample.split(AFdata$q0001, SplitRatio = .5)
-temp_mangroup <- subset(AFdata, samp.split1 == TRUE)
-testgroup  <- subset(AFdata, samp.split1 == FALSE)
-mangroup<-drop_na(temp_mangroup, c('BEPTA'))
+temp_mangroup <- subset(AFdata, samp.split1 == TRUE) #Will use this group to generate model after taking out NA's for BEPTA
+testgroup  <- subset(AFdata, samp.split1 == FALSE) #Will test model on them after it's created
+mangroup<-drop_na(temp_mangroup, c('BEPTA')) #Will use this group to generate model
 dim(mangroup) # n=248
 dim(testgroup) # n=261
 is.na(mangroup$BEPTA) #No missing PTA values
@@ -241,7 +242,32 @@ summary(bm5) #Best model I could create so far. Took the best model from the bac
 
 ```
 
+
+# Relevant Questions
+ #q0001- Participant ID
+ #q0002- Gender; 1=F
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
+ #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
+ #q0010- household income
+ #q0012- do health benefits cover cost of a hearing test
+ #q0013- do health benefits cover cost of hearing aids
+ #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than one race
+ #q0018_0001- In general, would you say your health is: 1= Exellent, 2= Very Good, 3= Good, 4=Fair, 5=Poor
+ #q0020_0001- In general would you say your quality of life is: 1=Excellent, 5 = Poor
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
+ #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
+ #q0030_0017- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
+ #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
+ #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
+ #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ #q0046- Pathway question: 1-3= No hearing problem; 4= Hearing loss, no treatment; 5= Hearing loss + treatment
+ 
+
+
 #Testing best model fit from the manipulated group on non-observed group (testgroup)--TGmodels
+
 ```{r}
 tgmod1<- lm(BEPTA ~ q0046 + q0032 + q0042 + q0003 + q0012 + q0002 + q0008, data=testgroup) 
 summary(tgmod1) #R-squared is higher for this one compared to the manipulation group used for bs & fs
@@ -337,12 +363,46 @@ mgres <- residuals(bm5)
 mgres <- as.data.frame(mgres)
 ggplot(mgres,aes(mgres)) +  geom_histogram(fill='red',alpha=0.5)
 
-plot(tgmod1)
-plot(bm5)
+plot(tgmod1) #test group
+plot(bm5) #manipulation group
 ```
 
-# Predicting BEPTA in non-test group
+
+# Checking prediction accuracy 
 ```{r}
-#file:///Users/C_Mo4/Desktop/Modeling%20Literature/R_code/Linear%20Regression%20Lecture.html
+tg.predictions <- predict(tgmod1,test.group1)
+
+#Now we can get the root mean squared error, a standardized measure of how off we were with our predicted values:
+
+results <- cbind(tg.predictions,test.group1$BEPTA) 
+colnames(results) <- c('pred','real')
+results <- as.data.frame(results)
+
+plot(results$pred, results$real)
+cor.test(results$pred, results$real)
+
+# DIFFICULTY WITH THIS FUNCTION. WONT WORK
+to_zero<- function(x){
+    if  (x < 0){
+        return(0)
+    }else{
+        return(x)
+    }
+}
+
+results$pred <- sapply(results$pred, to_zero)
+
+#Mean Squared Error
+mse <- mean((results$real-results$pred)^2)
+print(mse)
+
+
+mse^0.5
+
+
+
+results$diff<- results$pred - results$real
+mean.diff<- mean(results$diff, na.rm=T)
+
 ```
 
