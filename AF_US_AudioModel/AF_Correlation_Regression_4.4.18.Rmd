@@ -378,8 +378,10 @@ results <- cbind(tg.predictions,test.group1$BEPTA)
 colnames(results) <- c('pred','real')
 results <- as.data.frame(results)
 
-plot(results$pred, results$real)
-cor.test(results$pred, results$real)
+plot(results$real,results$pred)
+cor.test(results$real, results$pred)
+
+summary(lm(results$real~results$pred))
 
 # DIFFICULTY WITH THIS FUNCTION. WONT WORK
 to_zero<- function(x){
@@ -401,8 +403,36 @@ mse^0.5
 
 
 
-results$diff<- results$pred - results$real
-mean.diff<- mean(results$diff, na.rm=T)
+#results$diff<- results$pred - results$real
+#mean.diff<- mean(results$diff, na.rm=T)
 
 ```
+
+
+Changing PTA from continuous to categorical
+```{r}
+#ASHA Standards: (0)Normal: -10-25; (1)Mild: 26-40; (2)Moderate: 41-55; (3)Moderately-Severe: 56-70; (4)Severe: 71-90; (5)Profound: >90
+
+results$pred.deg <- cut(results$pred,
+                  breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
+                  labels=c("0", "1", "2", "3", "4", "5"))
+
+results$real.deg <- cut(results$real,
+                  breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
+                  labels=c("0", "1", "2", "3", "4", "5"))
+
+results.deg<-cbind(results$pred.deg, results$real.deg)
+colnames(results.deg) <-c('pred.deg', 'real.deg')
+results.deg<-as.data.frame  (results.deg)
+
+#Comparing predicted vs. real degree of hearing loss
+View(results.deg)
+results.deg$diff <- (results.deg$pred.deg - results.deg$real.deg)
+sum(results.deg$diff, na.rm=T)
+
+
+#Look at ROC curve
+
+```
+
 
