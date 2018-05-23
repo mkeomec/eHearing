@@ -223,6 +223,29 @@ summary(bs8) #large reduction with q0032 removed (.4385 --> .3739)
 ```
 
 
+# Relevant Questions
+ #q0001- Participant ID
+ #q0002- Gender; 1=F
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84 70= 85+
+ #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
+ #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
+ #q0010- household income
+ #q0012- do health benefits cover cost of a hearing test
+ #q0013- do health benefits cover cost of hearing aids
+ #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than               one race
+ #q0018_0001- In general, would you say your health is: 1= Exellent, 2= Very Good, 3= Good, 4=Fair, 5=Poor
+ #q0020_0001- In general would you say your quality of life is: 1=Excellent, 5 = Poor
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
+ #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
+ #q0030_0017- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
+ #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
+ #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
+ #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ #q0046- Pathway question: 1-3= No hearing problem; 4= Hearing loss, no treatment; 5= Hearing loss + treatment
+
+
+
 # Generating best model based on fs and bs processes
 ```{r}
 bm1<- lm(BEPTA ~ q0046 + q0032 + q0003 + q0012, data=man.group1)
@@ -434,5 +457,67 @@ sum(results.deg$diff, na.rm=T)
 #Look at ROC curve
 
 ```
+
+
+Re-running regression analysis with categorical variables instead of interval
+```{r}
+table(AFdata$q0046)
+
+bestmod.cat<- lm(BEPTA ~ factor(q0046) + factor(q0032) + factor(q0042) + q0003 + factor(q0012) + factor(q0002) + factor(q0008), data=man.group1) 
+summary(bestmod.cat)
+```
+
+
+Determining which categories should be our reference points
+```{r}
+# Relevant Questions
+ #q0001- Participant ID
+ #q0002- Gender; 1=F, 2=M
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
+ #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
+ #q0010- household income
+ #q0012- do health benefits cover cost of a hearing test
+ #q0013- do health benefits cover cost of hearing aids
+ #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than one race
+ #q0018_0001- In general, would you say your health is: 1= Exellent, 2= Very Good, 3= Good, 4=Fair, 5=Poor
+ #q0020_0001- In general would you say your quality of life is: 1=Excellent, 5 = Poor
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
+ #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
+ #q0030_0017- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
+ #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
+ #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
+ #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ #q0046- Pathway question: 1-3= No hearing problem; 4= Hearing loss, no treatment; 5= Hearing loss + treatment
+
+
+#q0008-- 5 should be reference (graduate)
+#q0010-- 1 should be reference (under $20K)
+#q0012-- 1 should be reference (yes)
+#q0013-- 1 should be reference (yes)
+#q0014-- 3 should be reference (white)
+#q0032-- 2 should be reference (no)
+#q0034-- 1 should be reference (no)
+#q0036-- 1 should be reference (no)
+#q0042-- 2 should be reference (no)
+#q0046 (aka pathway) -- 1 should be reference (no hearing problem)
+
+
+#collapsing q0046 into 3 categories where 1= no hearing problem (pathway 1), 4= hearing loss no help (pathway 2), & 5= hearing loss + help (pathway 3)
+AFdata$pathway <-ifelse(AFdata$q0046== 1 | AFdata$q0046== 2 | AFdata$q0046==3, 1, AFdata$q0046)
+table (AFdata$pathway)
+
+
+#base code for setting reference groups
+
+bpathway<- factor(AFdata$pathway, levels = c(5, 1, 4)) #put reference group FIRST!
+
+pracreg2<-lm(BEPTA~bpathway, data=AFdata)
+summary(pracreg2)
+
+```
+
+#Run LM between each variable & continuous BEPTA. Determine significance based on adjusted R-square. FS & BS on maninpulation group. After getting best model, run it on test group. Then use degree of hearing loss.
 
 
