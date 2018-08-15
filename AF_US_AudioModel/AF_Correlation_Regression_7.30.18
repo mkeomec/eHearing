@@ -473,7 +473,7 @@ Determining which categories should be our reference points
 # Relevant Questions
  #q0001- Participant ID
  #q0002- Gender; 1=F, 2=M
- #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 7= 85+
  #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
  #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
  #q0010- household income

@@ -17,7 +17,10 @@ library("tidyr")
 library("ggplot2")
 library('caTools')
 library("Hmisc")
-
+library("foreign")
+library("nnet")
+library("reshape2")
+library(gridExtra)
 ```
 
 
@@ -130,7 +133,7 @@ set.seed(4)
 samp.split1 <- sample.split(AFdata$q0001, SplitRatio = .5)
 temp_mangroup <- subset(AFdata, samp.split1 == TRUE) #Will use this group to generate model after taking out NA's for BEPTA
 testgroup  <- subset(AFdata, samp.split1 == FALSE) #Will test model on them after it's created
-mangroup<-drop_na(temp_mangroup, c('BEPTA')) #Will use this group to generate model
+mangroup <-drop_na(temp_mangroup, c('BEPTA')) #Will use this group to generate model
 dim(mangroup) # n=248
 dim(testgroup) # n=261
 is.na(mangroup$BEPTA) #No missing PTA values
@@ -406,7 +409,7 @@ cor.test(results$real, results$pred)
 
 summary(lm(results$real~results$pred))
 
-# DIFFICULTY WITH THIS FUNCTION. WONT WORK
+  # DIFFICULTY WITH THIS FUNCTION. WONT WORK
 to_zero<- function(x){
     if  (x < 0){
         return(0)
@@ -463,7 +466,7 @@ Re-running regression analysis with categorical variables instead of interval
 ```{r}
 table(AFdata$q0046)
 
-bestmod.cat<- lm(BEPTA ~ factor(q0046) + factor(q0032) + factor(q0042) + q0003 + factor(q0012) + factor(q0002) + factor(q0008), data=man.group1) 
+bestmod.cat<- lm(BEPTA ~ factor(q0046) + factor(q0032,levels=c(2,1)) + factor(q0042,levels=c(2,1)) + factor(q0003) + factor(q0012) + factor(q0002) + factor(man.group1$q0008,levels=c(5,4,3)), data=man.group1) 
 summary(bestmod.cat)
 ```
 
@@ -473,7 +476,7 @@ Determining which categories should be our reference points
 # Relevant Questions
  #q0001- Participant ID
  #q0002- Gender; 1=F, 2=M
- #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84; 7= 85+
  #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
  #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
  #q0010- household income
@@ -516,8 +519,67 @@ bpathway<- factor(AFdata$pathway, levels = c(5, 1, 4)) #put reference group FIRS
 pracreg2<-lm(BEPTA~bpathway, data=AFdata)
 summary(pracreg2)
 
+man.group1$pathway <-ifelse(man.group1$q0046== 1 | man.group1$q0046== 2 | man.group1$q0046==3, 1, man.group1$q0046)
 ```
 
 #Run LM between each variable & continuous BEPTA. Determine significance based on adjusted R-square. FS & BS on maninpulation group. After getting best model, run it on test group. Then use degree of hearing loss.
+```{r}
+
+pathway_model <- lm(pathway ~factor(q0032,levels=c(2,1)) + factor(q0042,levels=c(2,1)) + factor(q0003) + factor(q0012) + factor(q0002) + factor(man.group1$q0008,levels=c(5,4,3)), data=man.group1) 
+summary(pathway_model)
+
+#collapse pathway question
+man.group1$pathway <-ifelse(man.group1$q0046== 1 | man.group1$q0046== 2 | man.group1$q0046==3, 1, man.group1$q0046)
+
+tgmod1<- lm(BEPTA ~  factor(pathway)+ factor(q0032,levels=c(2,1)) +  factor(q0042,levels=c(2,1)) + factor(q0003) + factor(q0012) + factor(q0002) + factor(q0008,levels=c(5,4,3)), data=man.group1) 
+tg.predictions <- predict(tgmod1,test.group1)
+
+#Now we can get the root mean squared error, a standardized measure of how off we were with our predicted values:
+
+results <- cbind(tg.predictions,test.group1$BEPTA) 
+colnames(results) <- c('pred','real')
+results <- as.data.frame(results)
+
+plot(results$real,results$pred,xlim=c(0,500))
+plot(results$real.deg,results$pred.deg)
+cor.test(results$real, results$pred)
+
+summary(lm(results$real~results$pred))
+
+#ASHA Standards: (0)Normal: -10-25; (1)Mild: 26-40; (2)Moderate: 41-55; (3)Moderately-Severe: 56-70; (4)Severe: 71-90; (5)Profound: >90
+
+results$pred.deg <- cut(results$pred,
+                  breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
+                  labels=c("0", "1", "2", "3", "4", "5"))
+
+results$real.deg <- cut(results$real,
+                  breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
+                  labels=c("0", "1", "2", "3", "4", "5"))
+
+results.deg<-cbind(results$pred.deg, results$real.deg)
+colnames(results.deg) <-c('pred.deg', 'real.deg')
+results.deg<-as.data.frame  (results.deg)
+
+#Comparing predicted vs. real degree of hearing loss
+View(results.deg)
+results.deg$diff <- (results.deg$pred.deg - results.deg$real.deg)
+sum(results.deg$diff, na.rm=T)
+plot(results.deg$diff,na.rm=T)
 
 
+plot(results.deg$real.deg,results.deg$pred.deg)
+ggplot(results.deg,aes(x=real.deg,y=pred.deg)) + geom_point(alpha = 0.05)
+
+grid.table(with(results.deg,table(real=real.deg,pred=pred.deg)))
+
+plot(results$real,results$pred,xlim = c(0,100))
+
+### Linear regression is not appropriate for pathway variable. Use nominal regression
+
+pathway_nom_model <- multinom(pathway ~factor(q0032,levels=c(2,1)) + factor(q0042,levels=c(2,1)) + factor(q0003) + factor(q0012) + factor(q0002) + factor(q0008,levels=c(5,4,3)), data=man.group1) 
+summary(pathway_nom_model)
+z <- summary(pathway_nom_model)$coefficients/summary(pathway_nom_model)$standard.errors
+z
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+p
+```
