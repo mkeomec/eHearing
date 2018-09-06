@@ -737,15 +737,14 @@ mse^0.5
 
 Changing PTA from continuous to categorical
 ```{r}
-#ASHA Standards: (0)Normal: -10-25; (1)Mild: 26-40; (2)Moderate: 41-55; (3)Moderately-Severe: 56-70; (4)Severe: 71-90; (5)Profound: >90
-
+#ASHA Standards: (0)Normal: -10-25; (1)Mild: 26-40; (2)Moderate: 41-55; (3)Greater than moderate: 56+
 results2$pred.deg <- cut(results2$pred,
-                  breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
-                  labels=c("0", "1", "2", "3", "4", "5"))
+                  breaks=c(-Inf, 25, 40, 55, Inf),
+                  labels=c("0", "1", "2", "3"))
 
 results2$real.deg <- cut(results2$real,
-                  breaks=c(-Inf, 25, 40, 55, 70, 90, Inf),
-                  labels=c("0", "1", "2", "3", "4", "5"))
+                  breaks=c(-Inf, 25, 40, 55, Inf),
+                  labels=c("0", "1", "2", "3"))
 
 results2.deg<-cbind(results2$pred.deg, results2$real.deg)
 colnames(results2.deg) <-c('pred.deg', 'real.deg')
@@ -755,7 +754,7 @@ results2.deg<-as.data.frame  (results2.deg)
 View(results2.deg)
 results2.deg$diff <- (results2.deg$pred.deg - results2.deg$real.deg)
 sum(results2.deg$diff, na.rm=T)
-
 table(results2.deg[1:2])
+table(results2.deg)
 
 ```
