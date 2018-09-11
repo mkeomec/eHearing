@@ -1,5 +1,5 @@
 ---
-title: "AF_Correlation_Regression_Modeling_4.4.18"
+title: "AF_Correlation_Regression_Modeling_9.5.18"
 author: "cmosle1"
 date: "4/4/2018"
 output: html_document
@@ -8,7 +8,9 @@ output: html_document
 ```{r}
 #data import. 
 
-AFdata<- read.csv("~/Desktop/eHearing/Modeling Literature/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings="#NULL!")
+#AFdata<- read.csv("~/Desktop/eHearing/Modeling Literature/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings="#NULL!")
+
+AFdata<- read.csv("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings="#NULL!")
 #head(AFdata)
 #View(AFdata)
 
@@ -17,6 +19,8 @@ library("tidyr")
 library("ggplot2")
 library('caTools')
 library("Hmisc")
+library("boot")
+library(gridExtra)
 
 ```
 
@@ -756,5 +760,41 @@ results2.deg$diff <- (results2.deg$pred.deg - results2.deg$real.deg)
 sum(results2.deg$diff, na.rm=T)
 table(results2.deg[1:2])
 table(results2.deg)
+grid.table(results2.deg[1:2])
 
+```
+
+Bootstrap model creation and prediction on different sample sets
+
+```{r}
+#Create function to split data, train model, and test model prediction without output being correlation value
+model_boot <- function(){
+samp.split2 <- sample.split(AFdata$q0001, SplitRatio = .5)
+temp_mangroup2 <- subset(AFdata, samp.split2 == TRUE) #Will use this group to generate model after taking out NA's for BEPTA
+testgroup2  <- subset(AFdata, samp.split2 == FALSE) #Will test model on them after it's created
+mangroup2<-drop_na(temp_mangroup2, c('BEPTA')) #Will use this group to generate model
+dim(mangroup2) # n=248
+dim(testgroup2) # n=261
+is.na(mangroup2$BEPTA) #No missing PTA values
+identical(testgroup2, mangroup2)
+
+# Train model
+bestmod1.2<- lm(formula = BEPTA ~ factor(q0046) + factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) + factor(q0003) + factor(q0002), data = testgroup2)
+# Test model prediction
+testgroup2.predictions <- predict(bestmod1.2,testgroup2)
+
+#Now we can get the root mean squared error, a standardized measure of how off we were with our predicted values:
+
+results2 <- cbind(testgroup2.predictions,testgroup2$BEPTA) 
+colnames(results2) <- c('pred','real')
+results2 <- as.data.frame(results2)
+
+#plot(results2$real,results2$pred)
+cor <- cor(results2$real, results2$pred, use='complete.obs', method='pearson')
+cor
+}
+
+#Run function 1000 times and record correlation values
+out <- replicate(1000,model_boot())
+hist(out)
 ```
