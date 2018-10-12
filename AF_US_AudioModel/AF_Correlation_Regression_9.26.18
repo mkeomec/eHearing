@@ -68,7 +68,7 @@ AFdata$R8[AFdata$R8000 > 90] <- 95
 # Calculating PTA in each ear
 
 #colnames(AFdata[,1000:1021])
-AFdata$LPTA <- apply(AFdata[,c('L5','L','L2','L4')], 1, mean, na.rm=T)
+AFdata$LPTA <- apply(AFdata[,c('L5','L1','L2','L4')], 1, mean, na.rm=T)
 AFdata$RPTA <- apply(AFdata[,c('R5','R1','R2','R4')], 1, mean, na.rm=T)
 
 

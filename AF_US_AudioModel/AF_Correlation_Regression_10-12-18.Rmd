@@ -1,0 +1,424 @@
+---
+title: "AF_Correlation_Regression_Modeling_9.5.18"
+author: "cmosle1"
+date: "4/4/2018"
+output: html_document
+---
+
+```{r}
+
+library('plyr')
+library("dplyr")
+library("tidyr")
+library("ggplot2")
+library('caTools')
+library("Hmisc")
+library("boot")
+library("gridExtra")
+library("MASS")
+library("MuMIn")
+
+```
+
+# Relevant Questions
+# Determining which categories should be our reference points
+ #q0001- Participant ID
+ #q0002- Gender; 1=F, 2=M
+ #q0003- Age: 1= under 60; 2= 60-64; 3=65-69; 4= 70-74; 5= 75-79; 6= 80-84' 70= 85+
+ #q0005- marital status: 1=married/committed relationship; 2= single/divorced/widowed/never married
+ #q0008- highest grade completed: 1= none; 2=elementary; 3= secondary; 4-undergrad; 5= graduate
+ #q0010- household income
+ #q0012- do health benefits cover cost of a hearing test
+ #q0013- do health benefits cover cost of hearing aids
+ #q0014- race: 1= American indian; 2= Asian; 3= White; 4= Native Hawaiian/PI; 5= Black/AA; 6=More than one race
+ #q0018_0001- In general, would you say your health is: 1= Exellent, 2= Very Good, 3= Good, 4=Fair, 5=Poor
+ #q0020_0001- In general would you say your quality of life is: 1=Excellent, 5 = Poor
+ #q0030_0015- Have you ever been told by a doctor or HCP that you have hearing loss?
+ #q0030_0016- Have you ever been told by a doctor or HCP that you have vision loss? 
+ #q0030_0017- Have you ever been told by a doctor or HCP that you have balance problems or dizziness?
+ #q0032- Are you deaf or do you have a significant hearing difficulty? 1=Yes; 2=No
+ #q0034- Do your ever get noises such as ringing or buzzing in your ears or head (tinnitus) that last         more than 5 minutes? (If yes) Do you get these noises some of the time, most of the time, or         all of the time? 1=No; 2=Yes, some of the time; 3= Yes, most or all of the time
+ #q0036- Have you ever worked in a place that was so noisy you had to shout to be heard? 1=No; 2= Yes,         < 1 year; 3=Yes, for 1-5 years; 4= Yes, > 5 years
+ #q0042- Do you have a hearing problem now? 1= Yes; 2= No
+ #q0046- Pathway question: 1-3= No hearing problem; 4= Hearing loss, no treatment; 5= Hearing loss + treatment
+
+
+#q0008-- 5 should be reference (graduate)
+#q0010-- 1 should be reference (under $20K)
+#q0012-- 1 should be reference (yes)
+#q0013-- 1 should be reference (yes)
+#q0014-- 3 should be reference (white)
+#q0032-- 2 should be reference (no)
+#q0034-- 1 should be reference (no)
+#q0036-- 1 should be reference (no)
+#q0042-- 2 should be reference (no)
+#q0046 (aka pathway) -- 1 should be reference (no hearing problem)
+
+Bootstrap model creation and prediction on different sample sets. 
+Automated ordinal regression model selection
+
+
+```{r}
+
+#Import data
+AUS_data<- read.csv("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
+
+CAN_data<- read.csv("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
+
+UK_data<- read.csv("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+
+US_data<- read.csv("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+
+
+#Function to prep data for BEPTA calculation and HL categorization
+
+data_prep <- function(data){
+    
+#If thresholds are not numeric convert to numeric.
+
+if(class(data$L1000) != 'integer'){data[,c('L500','L1000','L2000','L4000','R500','R1000','R2000','R4000')] <- as.numeric(as.character(data[,c('L500','L1000','L2000','L4000','R500','R1000','R2000','R4000')]))
+}
+
+# Remove participants under age 60.
+data <- data[!(data$q0003==1),]
+    
+#issue with 90NR --> 95 change: the HHT doesn't measure other thresholds if 90NR at 1000Hz (first threshold tested). Should we set all thresholds to 95 or leave them missing? ---> SOLUTION: SET ALL >90 to 95
+
+    #Changing 90NR (aka 9999) and Conventional audio thresholds that are > 90 to 95
+#Left Ear
+
+data$L5<-data$L500
+data$L5[data$L500 > 90] <- 95
+data$L1<-data$L1000
+data$L1[data$L1000 > 90] <- 95
+data$L2<-data$L2000
+data$L2[data$L2000 > 90] <- 95
+data$L4<-data$L4000
+data$L4[data$L4000 > 90] <- 95
+
+
+#Right Ear
+data$R5<-data$R500
+data$R5[data$R500 > 90] <- 95
+data$R1<-data$R1000
+data$R1[data$R1000 > 90] <- 95
+data$R2<-data$R2000
+data$R2[data$R2000 > 90] <- 95
+data$R4<-data$R4000
+data$R4[data$R4000 > 90] <- 95
+
+#At 8000Hz
+data$L8<-data$L8000
+data$L8[data$L8000 > 90] <- 95
+data$R8<-data$R8000
+data$R8[data$R8000 > 90] <- 95
+
+# Calculating PTA in each ear
+
+#colnames(data[,1000:1021])
+data$LPTA <- apply(data[,c('L5','L1','L2','L4')], 1, mean, na.rm=T)
+data$RPTA <- apply(data[,c('R5','R1','R2','R4')], 1, mean, na.rm=T)
+
+
+data$LPTA[is.nan(data$LPTA)]  <- NA
+data$RPTA[is.nan(data$RPTA)]  <- NA
+
+#Now can calculate BEPTA (PTA in better ear)
+data$BEPTA<- ifelse((!is.na(data$RPTA) & data$RPTA <= data$LPTA) | is.na(data$LPTA),
+                      data$RPTA, data$LPTA)
+
+data$hcat<- cut(data$BEPTA,
+                  breaks=c(-Inf, 25, 40, 55, Inf),
+                  labels=c("1", "2", "3","4"))
+
+# Convert hcat into an ordered factor
+data$hcat <- factor(data$hcat,levels=c(1:4),ordered=TRUE)
+
+
+##collapsing q0046 into 3 categories where 1= no hearing problem (pathway 1), 4= hearing loss no help (pathway 2), & 5= hearing loss + help (pathway 3)
+##THESE LINES OF CODE ARE CURRENTLY NOT USED
+#data$pathway <-ifelse(data$q0046== 1 | data$q0046== 2 | data$q0046==3, 1, data$q0046)
+#table (data$pathway)
+##base code for setting reference groups
+#bpathway<- factor(data$pathway, levels = c(5, 1, 4)) #put reference group FIRST!
+
+return(data)
+}
+
+UK_data <- data_prep(UK_data)
+CAN_data <- data_prep(CAN_data)
+AUS_data <- data_prep(AUS_data)
+US_data <- data_prep(US_data)
+
+
+
+```
+
+
+Ordinal regression model selection using dredge
+
+
+```{R}
+options(na.action = "na.fail") 
+AFdata <- US_data
+AFdata <- AUS_data
+AFdata <- UK_data
+AFdata <- CAN_data
+
+#Use relevant variables
+boot_ormod_data <- AFdata[,c('hcat','q0002','q0003','q0008','q0012','q0013','q0018_0001','q0032','q0042','q0046')]
+boot_ormod_data <-  boot_ormod_data[complete.cases(boot_ormod_data),]
+
+#Generate model using all variables
+boot_ormod_all <- polr(hcat~factor(q0002)+factor(q0003)+factor(q0008) +factor(q0012)+factor(q0013)+ factor(q0018_0001)+factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046), data = boot_ormod_data, Hess=TRUE)
+
+#Dredge analyzes all models under all variable combinations and selects the best fitting model
+dredge_results <- dredge(boot_ormod_all)
+subset(dredge_results,delta==0)
+
+#Use the best model from dredge and calculate significance values
+ormod_best <- polr(hcat~factor(q0002)+factor(q0003)+factor(q0013)+factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046), data = boot_ormod_data, Hess=TRUE)
+
+#Show model results
+dredge_ortable <- coef(summary(ormod_best))
+p <- pnorm(abs(dredge_ortable[,"t value"]),lower.tail=FALSE)*2
+dredge_ortable <- cbind(dredge_ortable,'p value'=p)
+dredge_ortable
+
+
+
+```
+
+Train and test models using bootstrapping
+```{r}
+# Bootstrap model selection when split into train and test set. Use prediction correlation as best model parameter.
+options(na.action = "na.fail") 
+
+
+
+# Split data into train and test sets.
+model_boot_split <- function(data){
+
+    ##Create model with all variables
+    #
+    boot_ormod_data <- data[,c('hcat','q0002','q0003','q0008','q0012','q0013','q0018_0001','q0032','q0042','q0046')]
+    boot_ormod_data <-  boot_ormod_data[complete.cases(boot_ormod_data),]
+
+    samp.split2 <- sample.split(boot_ormod_data$q0002, SplitRatio = .7)
+    mangroup2 <- subset(boot_ormod_data, samp.split2 == TRUE) #Will use this group to generate model after taking out NA's for BEPTA
+    testgroup2  <- subset(boot_ormod_data, samp.split2 == FALSE) #Will test model on them after it's created
+    identical(testgroup2, mangroup2)
+    
+    # Input total model with all predictors
+    #boot_ormod_all <- polr(hcat~factor(q0002)+factor(q0003)+factor(q0008) +factor(q0012)+factor(q0013)+ factor(q0018_0001)+factor(q0032, levels = c(2,1)) +          factor(q0042, levels = c(2, 1)) +factor(q0046), data = mangroup2, Hess=TRUE)
+    
+    boot_ormod_all <- polr(hcat~factor(q0002)+ factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1))+factor(q0046), data = mangroup2, Hess=TRUE)
+    
+    dredge_results <- dredge(boot_ormod_all)
+    
+    dredge_best <- get.models(dredge_results, subset = 1)[[1]]
+    # Test model prediction
+    testgroup2.predictions <- predict(dredge_best,testgroup2)
+    
+    #Now we can get the root mean squared error, a standardized measure of how off we were with our predicted values:
+    
+    results2 <- cbind(testgroup2.predictions,testgroup2$hcat) 
+    colnames(results2) <- c('pred','real')
+    results2 <- as.data.frame(results2)
+    
+    #plot(results2$real,results2$pred)
+    cor <- cor(results2$real, results2$pred, use='complete.obs', method='pearson')
+    
+    #cor
+    out=c(dredge_best,cor)
+}
+
+#boot_out <- replicate(1000,model_boot_split())
+#hist(unlist(boot_out[seq(0,length(boot_out),20)]))
+#mean(unlist(boot_out[seq(0,length(boot_out),20)]))
+#quantile(unlist(boot_out[seq(0,length(boot_out),20)]))
+
+```
+
+
+Table analysis of responses
+```{R}
+
+# Explore pathway resonse vs hcat
+grid.table(table(UK_data$hcat,UK_data$q0046))
+grid.table(table(CAN_data$hcat,CAN_data$q0046))
+grid.table(table(US_data$hcat,US_data$q0046))
+grid.table(table(AUS_data$hcat,AUS_data$q0046))
+
+# Explore pathway response vs deaf 
+
+pathway_response <- function(data){
+#Explore pathway 5+ normal hearing people. Only works with US data. Partially works with UK. Other countries have too few in pathway 5, Normal hearing
+pathway5_group <- data[which(data$q0046==5 & data$hcat==1),]
+
+
+tab_137 <-  matrix(table(pathway5_group$q0137),dimnames=list(c('yes','no'),'Do you wear a cochlear implant or other surgically implanted hearing device'))
+tab_141 <- matrix(table(pathway5_group$q0141),dimnames=list(c('yes','no'),'Do you use hearing aids or other hearing devices?'))
+
+#*Think about how much you used your present hearing aids or other hearing devices over the past two weeks. On an average day, how many hours did you use them?
+
+tab_142 <- matrix(table(pathway5_group$q0142),dimnames=list(c('none','<1','1-4','4-8','8+'),'On an average day, how many hours did you use them?'))
+                  
+#Check each of the following devices that you have used to help you hear better.
+
+tab_151_1 <- matrix(table(pathway5_group$q0151_0001))
+names(tab_151_1) <- 'phone with volume control'
+tab_151_1
+
+tab_151_2 <- matrix(table(pathway5_group$q0151_0002))
+names(tab_151_2) <- 'headphones for the tv'
+tab_151_2
+
+tab_151_3 <- matrix(table(pathway5_group$q0151_0002))
+names(tab_151_3) <- 'computer'
+tab_151_3
+
+tab_151_4 <- matrix(table(pathway5_group$q0151_0004))
+names(tab_151_4) <- 'smartphone '
+tab_151_4
+
+tab_151_5 <- matrix(table(pathway5_group$q0151_0005))
+names(tab_151_5) <- 'alarm clock'
+tab_151_5
+
+tab_151_6 <- matrix(table(pathway5_group$q0151_0006))
+names(tab_151_6) <- 'alerting device for doorbell'
+tab_151_6
+tab_151_7 <- matrix(table(pathway5_group$q0151_0007))
+names(tab_151_7) <- 'iPad'
+tab_151_7
+tab_151_8 <- matrix(table(pathway5_group$q0151_0008))
+names(tab_151_8) <- 'personal amp'
+tab_151_8
+tab_151_9 <- matrix(table(pathway5_group$q0151_0009))
+names(tab_151_9) <- 'closed captioning'
+tab_151_9
+
+
+
+## Where did you get your hearing devices
+tab_143 <- matrix(table(pathway5_group$q0143),dimnames=list(c('hospital','family doctor office','audiologists office','retail store','none of these'),'Do you use hearing aids or other hearing devices?'))
+
+return(list(tab_137,tab_141,tab_142,tab_151_1,tab_151_2,tab_151_3,tab_151_4,tab_151_5,tab_151_6,tab_151_7,tab_151_8,tab_151_9,tab_143))
+#return(list(tab_137,tab_141,tab_142,tab_151_1,tab_151_2,tab_151_3,tab_151_4,tab_151_5,tab_151_6,tab_151_7,tab_151_9))
+}
+
+#Plot tables with probabilities for Pathway Questions and hearing loss questions
+## Q46 and hcat
+grid.table(round(100*prop.table(table(US_data$hcat,US_data$q0046)),digits=1))
+grid.table(round(100*prop.table(table(CAN_data$hcat,CAN_data$q0046)),digits=1))
+grid.table(round(100*prop.table(table(AUS_data$hcat,AUS_data$q0046)),digits=1))
+grid.table(round(100*prop.table(table(UK_data$hcat,UK_data$q0046)),digits=1))
+# hcat and q32
+grid.table(round(100*prop.table(table(US_data$hcat,US_data$q0032)),digits=1))
+grid.table(round(100*prop.table(table(CAN_data$hcat,CAN_data$q0032)),digits=1))
+grid.table(round(100*prop.table(table(AUS_data$hcat,AUS_data$q0032)),digits=1))
+grid.table(round(100*prop.table(table(UK_data$hcat,UK_data$q0032)),digits=1))
+
+# hcat and q42
+grid.table(round(100*prop.table(table(US_data$hcat,US_data$q0042)),digits=1))
+grid.table(round(100*prop.table(table(CAN_data$hcat,CAN_data$q0042)),digits=1))
+grid.table(round(100*prop.table(table(AUS_data$hcat,AUS_data$q0042)),digits=1))
+grid.table(round(100*prop.table(table(UK_data$hcat,UK_data$q0042)),digits=1))
+
+
+
+pathway_US <- pathway_response(US_data)
+#pathway_CAN <- pathway_response(CAN_data)
+#pathway_AUS <- pathway_response(AUS_data)
+#pathway_UK <- pathway_response(UK_data)
+
+
+### MANUAL ASSIGNMENT. Assign each country for table plotting
+data <- pathway_US
+#data <- pathway_CAN
+#data <- pathway_AUS
+#data <- pathway_UK
+
+
+# Plot tables for each country
+    table_plot1 <- tableGrob(as.data.frame(data[1]))
+    table_plot2 <- tableGrob(as.data.frame(data[2]))
+    table_plot3 <- tableGrob(as.data.frame(data[3]))
+    table_plot4 <- tableGrob(as.data.frame(data[4]))
+    table_plot5 <- tableGrob(as.data.frame(data[5]))
+    table_plot6 <- tableGrob(as.data.frame(data[6]))
+    table_plot7 <- tableGrob(as.data.frame(data[7]))
+    table_plot8 <- tableGrob(as.data.frame(data[8]))
+    table_plot9 <- tableGrob(as.data.frame(data[9]))
+    table_plot10 <- tableGrob(as.data.frame(data[10]))
+    table_plot11 <- tableGrob(as.data.frame(data[11]))
+    table_plot12 <- tableGrob(as.data.frame(data[12]))
+    table_plot13 <- tableGrob(as.data.frame(data[13]))
+
+## Plots must be manually run in console
+grid.arrange(table_plot1,table_plot2,table_plot3,table_plot13)
+grid.arrange(table_plot4,table_plot5,table_plot6,table_plot7,table_plot8,table_plot9,table_plot10)
+#
+```
+
+Explore Hearing loss category distribution from all countries
+```{r}
+
+# Run regression model seclection on all countries data
+# Combine all country's datasets 
+AUS_data$country <- 'AUS'
+US_data$country <- 'US'
+UK_data$country <- 'UK'
+CAN_data$country <- 'CAN'
+
+global_data <- rbind.fill(AUS_data,CAN_data)
+global_data <- rbind.fill(global_data,UK_data)
+global_data <- rbind.fill(global_data,US_data)
+
+boot_ormod_data <- global_data[,c('hcat','q0002','q0003','q0008','q0012','q0013','q0018_0001','q0032','q0042','q0046','country')]
+boot_ormod_data <-  boot_ormod_data[complete.cases(boot_ormod_data),]
+
+#Generate model using all variables
+boot_ormod_all <- polr(hcat~factor(q0002)+factor(q0003)+factor(q0008) +factor(q0012)+factor(q0013)+ factor(q0018_0001)+factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046)+country, data = boot_ormod_data, Hess=TRUE)
+
+#Dredge analyzes all models under all variable combinations and selects the best fitting model
+dredge_results <- dredge(boot_ormod_all)
+subset(dredge_results,delta==0)
+
+#Use the best model from dredge and calculate significance values
+ormod_best <- polr(hcat~factor(q0002)+factor(q0003)+factor(q0008)+ +factor(q0012)+factor(q0013)+factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046)+country, data = boot_ormod_data, Hess=TRUE)
+
+#Show model results
+dredge_ortable <- coef(summary(ormod_best))
+p <- pnorm(abs(dredge_ortable[,"t value"]),lower.tail=FALSE)*2
+dredge_ortable <- cbind(dredge_ortable,'p value'=p)
+dredge_ortable
+
+#Plot cross tabs
+grid.table(table(boot_ormod_data$hcat,boot_ormod_data$q0046))
+grid.table(table(boot_ormod_data$hcat,boot_ormod_data$q0042))
+grid.table(table(boot_ormod_data$hcat,boot_ormod_data$q0032))
+
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$country)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$q0046,boot_ormod_data$country)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0046)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0042)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0032)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0002)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0003)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0008)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0012)),digits=1))
+grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0013)),digits=1))
+
+grid.table(round(100*addmargins(prop.table(table(boot_ormod_data$q0046,boot_ormod_data$country))),digits=1))
+grid.table(round(100*addmargins(prop.table(table(boot_ormod_data$hcat,boot_ormod_data$country))),digits=1))
+
+# Examine country effect on HCAT
+ormod_best <- polr(hcat~factor(boot_ormod_data$country,levels=c('US','AUS','UK','CAN')), data = boot_ormod_data, Hess=TRUE)
+dredge_ortable <- coef(summary(ormod_best))
+p <- pnorm(abs(dredge_ortable[,"t value"]),lower.tail=FALSE)*2
+dredge_ortable <- cbind(dredge_ortable,'p value'=p)
+dredge_ortable
+
+```
