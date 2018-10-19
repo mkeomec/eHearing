@@ -414,6 +414,11 @@ grid.table(round(100*prop.table(table(boot_ormod_data$hcat,boot_ormod_data$q0013
 grid.table(round(100*addmargins(prop.table(table(boot_ormod_data$q0046,boot_ormod_data$country))),digits=1))
 grid.table(round(100*addmargins(prop.table(table(boot_ormod_data$hcat,boot_ormod_data$country))),digits=1))
 
+#Plot table of country by pathway using row percentages
+df=(table(boot_ormod_data$hcat,boot_ormod_data$country))
+df/rowsums(df)
+grid.table(df/rowSums(df))
+
 # Examine country effect on HCAT
 ormod_best <- polr(hcat~factor(boot_ormod_data$country,levels=c('US','AUS','UK','CAN')), data = boot_ormod_data, Hess=TRUE)
 dredge_ortable <- coef(summary(ormod_best))
