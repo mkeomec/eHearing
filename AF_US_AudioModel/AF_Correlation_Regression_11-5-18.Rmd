@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r}
-
+library(foreign)
 library('plyr')
 library("dplyr")
 library("tidyr")
@@ -229,8 +229,8 @@ model_boot_split <- function(data){
     #plot(results2$real,results2$pred)
     cor <- cor(results2$real, results2$pred, use='complete.obs', method='pearson')
     
-    #cor
-    out=dredge_list
+    out=cor
+    #out=dredge_list
 }
 
 #boot_out <- replicate(1,model_boot_split(US_data))
@@ -555,17 +555,17 @@ Other_train_data <- match.data[match.data$country==0,]
 #Replicate US-data boot strap model selection. Limited to 100 times because potential error
 #boot_out <- replicate(100,model_boot_split(US_train_data))
 #Replicate other country-data boot strap model selection. Limited to 100 times because potential error
-boot_out <- replicate(250,model_boot_split(Other_train_data))
+#boot_out <- replicate(250,model_boot_split(Other_train_data))
 
-boot_results <- as.data.frame(matrix(unlist(boot_out), byrow=T,,6))
-names(boot_results) = c('q0002','q0005','q0010','q0032','q0042','q0046')
-boot_results
+#boot_results <- as.data.frame(matrix(unlist(boot_out), byrow=T,,6))
+#names(boot_results) = c('q0002','q0005','q0010','q0032','q0042','q0046')
+#boot_results
 
-boot_results <-  data.frame(lapply(boot_results, as.character),stringsAsFactors=FALSE)
-boot_results[boot_results=='+'] <- 1
-boot_results <- data.frame(lapply(boot_results, as.numeric))
+#boot_results <-  data.frame(lapply(boot_results, as.character),stringsAsFactors=FALSE)
+#boot_results[boot_results=='+'] <- 1
+#boot_results <- data.frame(lapply(boot_results, as.numeric))
 
-colSums(boot_results,na.rm = T)
+#colSums(boot_results,na.rm = T)
 
 train1 <- c(13,2,44,100,82,100)
 names(train1) <- c('q0002','q0005','q0010','q0032','q0042','q0046') 
@@ -588,12 +588,33 @@ names(train9) <- c('q0002','q0005','q0010','q0032','q0042','q0046')
 train10 <- c(19,1,42,100,77,100)
 names(train10) <- c('q0002','q0005','q0010','q0032','q0042','q0046') 
 US_train <- rbind(train1,train2,train3,train4,train5,train6,train7,train8,train9,train10)
-
+US_train <- colSums(US_train)
+US_train <- US_train/1000
 
 train1 <- c(4,20,13,99,36,100)
 train2 <- c(411,366,105,496,303,500)
 train3 <- c(211,191,40,248,149,250)
 train4 <- c(208,182,51,248,156,250)
+Other_train <- rbind(train1,train2,train3,train4)
+Other_train <- colSums(Other_train)
+Other_train <- Other_train/1100
+names(Other_train) <- c('q0002','q0005','q0010','q0032','q0042','q0046') 
+#Based on model selection, use 'q0002','q0005','q0010','q0032','q0042','q0046' in final model
+final_mod<- polr(hcat~factor(q0002)+factor(q0003)+factor(q0005)+factor(q0010) +factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046)+country, data = US_train_data, Hess=TRUE)
+summary(final_mod)
+final_mod_US <- coef(summary(final_mod))
+p <- pnorm(abs(final_mod_US[,"t value"]),lower.tail=FALSE)*2
+final_mod_US <- cbind(final_mod_US,'p value'=p)
+final_mod_US
+
+
+final_mod<- polr(hcat~factor(q0002)+factor(q0003)+factor(q0005)+factor(q0010) +factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046)+country, data = Other_train_data, Hess=TRUE)
+summary(final_mod)
+final_mod_Other <- coef(summary(final_mod))
+p <- pnorm(abs(final_mod_Other[,"t value"]),lower.tail=FALSE)*2
+final_mod_Other <- cbind(final_mod_Other,'p value'=p)
+final_mod_Other
+
 #hist(unlist(boot_out[seq(0,length(boot_out),20)]))
 #mean(unlist(boot_out[seq(0,length(boot_out),20)]))
 #quantile(unlist(boot_out[seq(0,length(boot_out),20)]))
@@ -622,3 +643,143 @@ train4 <- c(208,182,51,248,156,250)
 ```
 
 
+```{r}
+#boot_out <- replicate(100,model_boot_split(global_data_complete))
+
+```
+
+
+Train and test model using bootstrapping on Global data set
+
+```{r}
+# Bootstrap model selection when split into train and test set. Use prediction correlation as best model parameter.
+
+
+# Split data into train and test sets.
+global_model_boot_split <- function(data){
+
+    ##Create model with all variables
+    boot_ormod_data <- data[,c('hcat','q0002','q0005','q0010','q0032','q0034','q0036','q0042','q0046')]
+    boot_ormod_data <-  boot_ormod_data[complete.cases(boot_ormod_data),]
+
+    samp.split2 <- sample.split(boot_ormod_data$q0002, SplitRatio = .5)
+    mangroup2 <- subset(boot_ormod_data, samp.split2 == TRUE) #Will use this group to generate model after taking out NA's for BEPTA
+    testgroup2  <- subset(boot_ormod_data, samp.split2 == FALSE) #Will test model on them after it's created
+    identical(testgroup2, mangroup2)
+    
+    # Input total model with all predictors
+    #boot_ormod_all <- polr(hcat~factor(q0002) +factor(q0012)+factor(q0013)+ factor(q0018_0001)+factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046), data = mangroup2, Hess=TRUE)
+    
+    boot_ormod_all <- polr(hcat~factor(q0002)+factor(q0005)+factor(q0010)+factor(q0032)+ factor(q0042)+factor(q0046),     data = mangroup2, Hess=TRUE)
+    
+    dredge_results <- dredge(boot_ormod_all)
+     dredge_best <- get.models(dredge_results, subset = 1)[[1]]
+    dredge_list_add <-dredge_results[1,c('factor(q0002)','factor(q0005)','factor(q0010)','factor(q0032)','factor(q0042)','factor(q0046)')]
+    
+    if (exists('dredge_list')){
+    dredge_list[nrow(dredge_list)+1,] <- dredge_list_add
+    }else{
+    dredge_list <- dredge_list_add
+    }
+    # Test model prediction
+    testgroup2.predictions <- predict(dredge_best,testgroup2)
+    
+    #Now we can get the root mean squared error, a standardized measure of how off we were with our predicted values:
+    
+    results2 <- cbind(testgroup2.predictions,testgroup2$hcat) 
+    colnames(results2) <- c('pred','real')
+    results2 <- as.data.frame(results2)
+    
+    #plot(results2$real,results2$pred)
+    cor <- cor(results2$real, results2$pred, use='complete.obs', method='pearson')
+    
+    #out=cor
+    out=dredge_list
+}
+
+
+#boot_out <- replicate(1000,global_model_boot_split(global_data))
+#boot_results <- as.data.frame(matrix(unlist(boot_out), byrow=T,,6))
+#names(boot_results) = c('q0002','q0005','q0010','q0032','q0042','q0046')
+#boot_results <-  data.frame(lapply(boot_results, as.character),stringsAsFactors=FALSE)
+#boot_results[boot_results=='+'] <- 1
+#boot_results <- data.frame(lapply(boot_results, as.numeric))
+
+#colSums(boot_results,na.rm = T)
+
+#q0002 q0005 q0010 q0032 q0042 q0046 
+# 959   290   817  1000  1000  1000 
+
+
+
+```
+
+```{r}
+ ## Split global data and use global model to predict HCAT.
+
+    boot_ormod_data <- global_data[,c('hcat','q0002','q0003','q0010','q0032','q0042','q0046')]
+    boot_ormod_data <-  boot_ormod_data[complete.cases(boot_ormod_data),]
+
+    samp.split2 <- sample.split(boot_ormod_data$q0002, SplitRatio = .5)
+    mangroup2 <- subset(boot_ormod_data, samp.split2 == TRUE) #Will use this group to generate model after taking out NA's for BEPTA
+    testgroup2  <- subset(boot_ormod_data, samp.split2 == FALSE) #Will test model on them after it's created
+    identical(testgroup2, mangroup2)
+    
+    # Input total model with all predictors
+    #boot_ormod_all <- polr(hcat~factor(q0002) +factor(q0012)+factor(q0013)+ factor(q0018_0001)+factor(q0032, levels = c(2,1)) + factor(q0042, levels = c(2, 1)) +factor(q0046), data = mangroup2, Hess=TRUE)
+    
+    boot_ormod_all <- polr(hcat~factor(q0002)+factor(q0003)+factor(q0010)+factor(q0032)+ factor(q0042)+factor(q0046), data = mangroup2, Hess=TRUE)
+  
+    # Test model prediction
+    testgroup2.predictions <- predict(boot_ormod_all,testgroup2)
+    
+    #Now we can get the root mean squared error, a standardized measure of how off we were with our predicted values:
+    
+    results2 <- cbind(testgroup2.predictions,testgroup2$hcat) 
+    colnames(results2) <- c('pred','real')
+    results2 <- as.data.frame(results2)
+    table(results2)
+    
+    # Calculate difference between predited and actual
+    results2$diff <- results2$pred-results2$real
+    results2$diff <- abs(results2$diff)
+    table(results2$diff)
+```
+
+```{r}
+# Import Research Now data sets. NOTE: column names have to be shifted because some surveys contain the first question, Where do you reside. 
+
+UK_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
+
+UK_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/England eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
+
+London_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/Greater London eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
+
+AUS_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE)
+
+AUS_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE)
+
+CAN_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE)
+
+CAN_state_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE)
+
+names(CAN_RN_data) <- names(CAN_state_RN_data[-11])
+
+US_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA - Panel.sav", to.data.frame=TRUE)
+
+US_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE)
+
+US_state_RN_data <- US_state_RN_data[-13]
+names(US_RN_data) <- names(CAN_state_RN_data[-11])
+names(US_state_RN_data) <- names(CAN_state_RN_data[-11])
+
+test_US <- as.data.frame(attr(US_state_RN_data,'variable.labels'))
+test_US <- as.data.frame(attr(US_RN_data,'variable.labels'))
+
+table(CAN_RN_data$q0046)
+table(CAN_state_RN_data$q0046)
+table(US_state_RN_data$q0046)
+table(US_RN_data$q0046)
+
+
+```
