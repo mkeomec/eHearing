@@ -719,7 +719,7 @@ global_model_boot_split <- function(data){
 
     boot_ormod_data <- global_data[,c('hcat','q0002','q0003','q0010','q0032','q0042','q0046','country_id')]
     boot_ormod_data <-  boot_ormod_data[complete.cases(boot_ormod_data),]
-
+set.seed(123)
     samp.split2 <- sample.split(boot_ormod_data$q0002, SplitRatio = .5)
     mangroup2 <- subset(boot_ormod_data, samp.split2 == TRUE) #Will use this group to generate model after taking out NA's for BEPTA
     testgroup2  <- subset(boot_ormod_data, samp.split2 == FALSE) #Will test model on them after it's created
@@ -751,35 +751,39 @@ global_model_boot_split <- function(data){
 # Import Research Now data sets. NOTE: column names have to be shifted because some surveys contain the first question, Where do you reside. 
 
 UK_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
-UK_RN_data$country_id <- UK
+UK_RN_data$country_id <- 'UK'
 
 UK_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/England eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
-UK_state_RN_data$country_id <- UK
+UK_state_RN_data$country_id <- 'UK'
 
 London_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/Greater London eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
-London_RN_data$country_id <- UK
+London_RN_data$country_id <- 'UK'
 
 AUS_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE)
-AUS_RN_data$country_id <- AUS
+AUS_RN_data$country_id <- 'AUS'
 
 AUS_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE)
-AUS_state_RN_data$country_id <- AUS
+AUS_state_RN_data$country_id <- 'AUS'
 
+#Ontario- Target 2000 respondents. Info on Toronto or other areas of Ontario
 CAN_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE)
-CAN_RN_data$country_id <- CAN
+CAN_RN_data$country_id <- 'CAN'
 
 CAN_state_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE)
-CAN_state_RN_data$country_id <- CAN
+CAN_state_RN_data$country_id <- 'CAN'
 names(CAN_RN_data) <- names(CAN_state_RN_data[-11])
 
 US_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA - Panel.sav", to.data.frame=TRUE)
-US_RN_data$country_id <- US
+US_RN_data$country_id <- 'US'
 
 US_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE)
-US_state_RN_data$country_id <- US
+US_state_RN_data$country_id <- 'US'
 
 #q0003  in "USA WA" Research now dataset is are you a current resident of WA. Remove this Question
 US_state_RN_data <- US_state_RN_data[-13]
+
+names(US_RN_data) <- names(CAN_state_RN_data[-11])
+names(US_state_RN_data) <- names(CAN_state_RN_data[-11])
 
 table(CAN_RN_data$q0046)
 table(CAN_state_RN_data$q0046)
@@ -788,7 +792,6 @@ table(US_RN_data$q0046)
 
 all_RN_data <- rbind.fill(UK_RN_data,UK_state_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,London_RN_data)
-all_RN_data$country_id <- 'UK'
 all_RN_data <- rbind.fill(all_RN_data,AUS_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,AUS_state_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,CAN_RN_data)
@@ -848,6 +851,45 @@ all_RN_data$q0046 <- as.factor(all_RN_data$q0046)
 
 
 hcat_impute <- predict(boot_ormod_all,all_RN_data)
+hcat_impute_test <- as.data.frame(cbind(hcat_impute,all_RN_data$country_id,all_RN_data$q0046))
+table(hcat_impute_test$hcat_impute,hcat_impute_test$V2)
+table(hcat_impute_test$V3,hcat_impute_test$V2)
 
+df=(table(hcat_impute_test$hcat_impute,hcat_impute_test$V2))
+df/colSums(df)
+grid.table(df/colSums(df))
+grid.table(round(prop.table(df,2)*100,3))
 
+#Explore response drop off
+sum(table(CAN_RN_data$q0002))
+sum(table(CAN_RN_data$q0003))
+sum(table(CAN_RN_data$q0004))
+sum(table(CAN_RN_data$q0005))
+sum(table(CAN_RN_data$q0006))
+sum(table(CAN_RN_data$q0007))
+sum(table(CAN_RN_data$q0008))
+sum(table(CAN_RN_data$q0009_0001))
+sum(table(CAN_RN_data$q0046))
+
+sum(table(CAN_state_RN_data$q0002))
+sum(table(CAN_state_RN_data$q0003))
+sum(table(CAN_state_RN_data$q0004))
+sum(table(CAN_state_RN_data$q0005))
+sum(table(CAN_state_RN_data$q0006))
+sum(table(CAN_state_RN_data$q0007))
+sum(table(CAN_state_RN_data$q0008))
+sum(table(CAN_state_RN_data$q0009_0001))
+sum(table(CAN_state_RN_data$q0046))
+
+sum(table(UK_RN_data$q0002))
+sum(table(UK_RN_data$q0003))
+sum(table(UK_RN_data$q0004))
+sum(table(UK_RN_data$q0005))
+sum(table(UK_RN_data$q0006))
+sum(table(UK_RN_data$q0007))
+sum(table(UK_RN_data$q0008))
+sum(table(UK_RN_data$q0009_0001))
+sum(table(UK_RN_data$q0046))
+
+CAN_RN_data$StartDate[is.na(CAN_RN_data$q0008)]
 ```
