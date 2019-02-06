@@ -714,6 +714,7 @@ global_model_boot_split <- function(data){
 
 ```
 
+Split global data and use Global model to predict HCAT
 ```{r}
  ## Split global data and use global model to predict HCAT.
 
@@ -750,33 +751,33 @@ set.seed(123)
 ```{r}
 # Import Research Now data sets. NOTE: column names have to be shifted because some surveys contain the first question, Where do you reside. 
 
-UK_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
+UK_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
 UK_RN_data$country_id <- 'UK'
 
-UK_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/England eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
+UK_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/England eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 UK_state_RN_data$country_id <- 'UK'
 
-London_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/Greater London eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE)
+London_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/Greater London eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 London_RN_data$country_id <- 'UK'
 
-AUS_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE)
+AUS_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 AUS_RN_data$country_id <- 'AUS'
 
-AUS_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE)
+AUS_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 AUS_state_RN_data$country_id <- 'AUS'
 
 #Ontario- Target 2000 respondents. Info on Toronto or other areas of Ontario
-CAN_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE)
+CAN_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 CAN_RN_data$country_id <- 'CAN'
 
-CAN_state_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE)
+CAN_state_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 CAN_state_RN_data$country_id <- 'CAN'
 names(CAN_RN_data) <- names(CAN_state_RN_data[-11])
 
-US_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA - Panel.sav", to.data.frame=TRUE)
+US_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 US_RN_data$country_id <- 'US'
 
-US_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE)
+US_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 US_state_RN_data$country_id <- 'US'
 
 #q0003  in "USA WA" Research now dataset is are you a current resident of WA. Remove this Question
@@ -800,53 +801,58 @@ all_RN_data <- rbind.fill(all_RN_data,US_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,US_state_RN_data)
 all_RN_data <- all_RN_data[!(all_RN_data$q0003==1),]
 
+#Filter out incomplete surveys:
+# Survey was not completed if Q46 had no response
+all_RN_data<- all_RN_data[complete.cases(all_RN_data$q0046),]
+
+
 
 # RN data has responses in character form. Need to change to numerical factors before imputing
-all_RN_data$q0002 <- as.character(all_RN_data$q0002)
-all_RN_data$q0002[all_RN_data$q0002 == "Male"] <- 1
-all_RN_data$q0002[all_RN_data$q0002 == "Female"] <- 2
-all_RN_data$q0002 <- as.factor(all_RN_data$q0002)
+#all_RN_data$q0002 <- as.character(all_RN_data$q0002)
+#all_RN_data$q0002[all_RN_data$q0002 == "Male"] <- 1
+#all_RN_data$q0002[all_RN_data$q0002 == "Female"] <- 2
+#all_RN_data$q0002 <- as.factor(all_RN_data$q0002)
 
-all_RN_data$q0003 <- as.character(all_RN_data$q0003)
-all_RN_data$q0003[grep('Under 60',all_RN_data$q0003)] <- 1
-all_RN_data$q0003[grep('60',all_RN_data$q0003)] <- 2
-all_RN_data$q0003[grep('65',all_RN_data$q0003)] <- 3
-all_RN_data$q0003[grep('70',all_RN_data$q0003)] <- 4
-all_RN_data$q0003[grep('75',all_RN_data$q0003)] <- 5
-all_RN_data$q0003[grep('80',all_RN_data$q0003)] <- 6
-all_RN_data$q0003[grep('85',all_RN_data$q0003)] <- 7
-all_RN_data$q0003 <- as.factor(all_RN_data$q0003)
-all_RN_data <- all_RN_data[!(all_RN_data$q0003==1),]
+#all_RN_data$q0003 <- as.character(all_RN_data$q0003)
+#all_RN_data$q0003[grep('Under 60',all_RN_data$q0003)] <- 1
+#all_RN_data$q0003[grep('60',all_RN_data$q0003)] <- 2
+#all_RN_data$q0003[grep('65',all_RN_data$q0003)] <- 3
+#all_RN_data$q0003[grep('70',all_RN_data$q0003)] <- 4
+#all_RN_data$q0003[grep('75',all_RN_data$q0003)] <- 5
+#all_RN_data$q0003[grep('80',all_RN_data$q0003)] <- 6
+#all_RN_data$q0003[grep('85',all_RN_data$q0003)] <- 7
+#all_RN_data$q0003 <- as.factor(all_RN_data$q0003)
+#all_RN_data <- all_RN_data[!(all_RN_data$q0003==1),]
 
-all_RN_data$q0010 <- as.character(all_RN_data$q0010)
-all_RN_data$q0010[grep('Under',all_RN_data$q0010)] <- 1
-all_RN_data$q0010[grep('39,999',all_RN_data$q0010)] <- 2
-all_RN_data$q0010[grep('40,000',all_RN_data$q0010)] <- 3
-all_RN_data$q0010[grep('60,000',all_RN_data$q0010)] <- 4
-all_RN_data$q0010[grep('80,000',all_RN_data$q0010)] <- 5
-all_RN_data$q0010[grep('More',all_RN_data$q0010)] <- 6
-all_RN_data$q0010[grep('85',all_RN_data$q0010)] <- 7
-all_RN_data$q0010[grep('Prefer',all_RN_data$q0010)] <- 8
-all_RN_data$q0010 <- as.factor(all_RN_data$q0010)
-all_RN_data <- all_RN_data[!(all_RN_data$q0010==8),]
+#all_RN_data$q0010 <- as.character(all_RN_data$q0010)
+#all_RN_data$q0010[grep('Under',all_RN_data$q0010)] <- 1
+#all_RN_data$q0010[grep('39,999',all_RN_data$q0010)] <- 2
+#all_RN_data$q0010[grep('40,000',all_RN_data$q0010)] <- 3
+#all_RN_data$q0010[grep('60,000',all_RN_data$q0010)] <- 4
+#all_RN_data$q0010[grep('80,000',all_RN_data$q0010)] <- 5
+#all_RN_data$q0010[grep('More',all_RN_data$q0010)] <- 6
+#all_RN_data$q0010[grep('85',all_RN_data$q0010)] <- 7
+#all_RN_data$q0010[grep('Prefer',all_RN_data$q0010)] <- 8
+#all_RN_data$q0010 <- as.factor(all_RN_data$q0010)
+#all_RN_data <- all_RN_data[!(all_RN_data$q0010==8),]
 
-all_RN_data$q0032 <- as.character(all_RN_data$q0032)
-all_RN_data$q0032[all_RN_data$q0032 == "Yes"] <- 1
-all_RN_data$q0032[all_RN_data$q0032 == "No"] <- 2
-all_RN_data$q0032 <- as.factor(all_RN_data$q0032)
+#all_RN_data$q0032 <- as.character(all_RN_data$q0032)
+#all_RN_data$q0032[all_RN_data$q0032 == "Yes"] <- 1
+#all_RN_data$q0032[all_RN_data$q0032 == "No"] <- 2
+#all_RN_data$q0032 <- as.factor(all_RN_data$q0032)
 
-all_RN_data$q0042 <- as.character(all_RN_data$q0042)
-all_RN_data$q0042[all_RN_data$q0042 == "Yes"] <- 1
-all_RN_data$q0042[all_RN_data$q0042 == "No"] <- 2
-all_RN_data$q0042 <- as.factor(all_RN_data$q0042)
+#all_RN_data$q0042 <- as.character(all_RN_data$q0042)
+#all_RN_data$q0042[all_RN_data$q0042 == "Yes"] <- 1
+#all_RN_data$q0042[all_RN_data$q0042 == "No"] <- 2
+#all_RN_data$q0042 <- as.factor(all_RN_data$q0042)
 
-all_RN_data$q0046 <- as.character(all_RN_data$q0046)
-all_RN_data$q0046[grep("I do not know if I have a hearing problem",all_RN_data$q0046)] <- 1
-all_RN_data$q0046[grep("I do not have any problems with my hearing and nobody has complained about my hearing",all_RN_data$q0046)] <- 2
-all_RN_data$q0046[grep("I do not have any problems with my hearing but sometimes other people tell me",all_RN_data$q0046)] <- 3
-all_RN_data$q0046[grep("I do have a hearing problem but I haven",all_RN_data$q0046)] <- 4
-all_RN_data$q0046[grep("I do have a hearing problem and I wear hearing aids",all_RN_data$q0046)] <- 5
-all_RN_data$q0046 <- as.factor(all_RN_data$q0046)
+#all_RN_data$q0046 <- as.character(all_RN_data$q0046)
+#all_RN_data$q0046[grep("I do not know if I have a hearing problem",all_RN_data$q0046)] <- 1
+#all_RN_data$q0046[grep("I do not have any problems with my hearing and nobody has complained about my hearing",all_RN_data$q0046)] <- 2
+#all_RN_data$q0046[grep("I do not have any problems with my hearing but sometimes other people tell me",all_RN_data$q0046)] <- 3
+#all_RN_data$q0046[grep("I do have a hearing problem but I haven",all_RN_data$q0046)] <- 4
+#all_RN_data$q0046[grep("I do have a hearing problem and I wear hearing aids",all_RN_data$q0046)] <- 5
+#all_RN_data$q0046 <- as.factor(all_RN_data$q0046)
 
 
 
