@@ -149,7 +149,25 @@ CAN_data <- data_prep(CAN_data)
 AUS_data <- data_prep(AUS_data)
 US_data <- data_prep(US_data)
 
+# Combine all country's datasets 
+AUS_data$country_id <- 'AUS'
+AUS_data$state_id <- 'NSW'
+AUS_data$city_id <- 'Sydney'
+US_data$country_id <- 'US'
+US_data$state_id <- 'WA'
+US_data$city_id <- 'Seattle'
+UK_data$country_id <- 'UK'
+UK_data$region_id <- 'England'
+UK_data$state_id <- 'London'
+UK_data$city_id <- 'City of London'
 
+CAN_data$country_id <- 'CAN'
+CAN_data$state_id <- 'Ontario'
+CAN_data$city_id <- 'Toronto'
+
+global_data <- rbind.fill(AUS_data,CAN_data)
+global_data <- rbind.fill(global_data,UK_data)
+global_data <- rbind.fill(global_data,US_data)
 
 ```
 
@@ -370,10 +388,10 @@ Explore Hearing loss category distribution from all countries
 
 # Run regression model seclection on all countries data
 # Combine all country's datasets 
-AUS_data$country <- 'AUS'
-US_data$country <- 'US'
-UK_data$country <- 'UK'
-CAN_data$country <- 'CAN'
+AUS_data$country_id <- 'AUS'
+US_data$country_id <- 'US'
+UK_data$country_id <- 'UK'
+CAN_data$country_id <- 'CAN'
 
 
 global_data <- rbind.fill(AUS_data,CAN_data)
@@ -752,46 +770,73 @@ set.seed(123)
 # Import Research Now data sets. NOTE: column names have to be shifted because some surveys contain the first question, Where do you reside. 
 
 UK_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
+test <- attr(UK_RN_data$q0001,'value.labels')
+UK_RN_data$q0001 <- names(test)[UK_RN_data$q0001]
 UK_RN_data$country_id <- 'UK'
+UK_RN_data$region_id <- UK_RN_data$q0001
 
 UK_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/England eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+test <- attr(UK_state_RN_data$q0001,'value.labels')
+UK_state_RN_data$q0001 <- names(test)[UK_state_RN_data$q0001]
 UK_state_RN_data$country_id <- 'UK'
+UK_state_RN_data$region_id <- 'England'
+UK_state_RN_data$state_id <- UK_state_RN_data$q0001
 
 London_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/Greater London eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+test <- attr(London_RN_data$q0001,'value.labels')
+London_RN_data$q0001 <- names(test)[London_RN_data$q0001]
 London_RN_data$country_id <- 'UK'
+UK_state_RN_data$region_id <- 'England'
+London_RN_data$city_id <-London_RN_data$q0001
 
 AUS_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+test <- attr(AUS_RN_data$q0001,'value.labels')
+AUS_RN_data$q0001 <- names(test)[AUS_RN_data$q0001]
 AUS_RN_data$country_id <- 'AUS'
+AUS_RN_data$state_id <- AUS_RN_data$q0001
 
 AUS_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+test <- attr(AUS_state_RN_data$q0001,'value.labels')
+AUS_state_RN_data$q0001 <- names(test)[AUS_state_RN_data$q0001]
 AUS_state_RN_data$country_id <- 'AUS'
+AUS_state_RN_data$state_id <- 'NSW'
+AUS_state_RN_data$city_id <- AUS_state_RN_data$q0001
 
 #Ontario- Target 2000 respondents. Info on Toronto or other areas of Ontario
+# Dataset omits location
 CAN_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+CAN_RN_data$q0001_new <- NA
+CAN_RN_data <- CAN_RN_data[,c(1:10,1522,11:1521)]
+names(CAN_RN_data) <- names(AUS_state_RN_data[1:1522])
 CAN_RN_data$country_id <- 'CAN'
+CAN_RN_data$state_id <- 'Ontario'
 
 CAN_state_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+test <- attr(CAN_state_RN_data$q0001,'value.labels')
+CAN_state_RN_data$q0001 <- names(test)[CAN_state_RN_data$q0001]
+names(CAN_state_RN_data) <- names(AUS_state_RN_data[1:1522])
 CAN_state_RN_data$country_id <- 'CAN'
-names(CAN_RN_data) <- names(CAN_state_RN_data[-11])
+CAN_state_RN_data$state_id <- CAN_state_RN_data$q0001
+#names(CAN_RN_data) <- names(CAN_state_RN_data[-11])
 
+# Dataset omits location
 US_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+US_RN_data$q0001_new <- NA
+US_RN_data <- US_RN_data[,c(1:10,1522,11:1521)]
+names(US_RN_data) <- names(CAN_state_RN_data[1:1522])
 US_RN_data$country_id <- 'US'
 
+# Dataset omits location
 US_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-US_state_RN_data$country_id <- 'US'
-
+US_state_RN_data$q0001_new <- NA
+US_state_RN_data <- US_state_RN_data[,c(1:10,1523,11:1522)]
 #q0003  in "USA WA" Research now dataset is are you a current resident of WA. Remove this Question
 US_state_RN_data <- US_state_RN_data[-13]
+names(US_state_RN_data) <- names(CAN_state_RN_data[1:1522])
+US_state_RN_data$country_id <- 'US'
+US_state_RN_data$state_id <- 'WA'
 
-names(US_RN_data) <- names(CAN_state_RN_data[-11])
-names(US_state_RN_data) <- names(CAN_state_RN_data[-11])
-
-table(CAN_RN_data$q0046)
-table(CAN_state_RN_data$q0046)
-table(US_state_RN_data$q0046)
-table(US_RN_data$q0046)
-
-all_RN_data <- rbind.fill(UK_RN_data,UK_state_RN_data)
+all_RN_data <- rbind.fill(UK_RN_data,UK_state_RN_data) 
 all_RN_data <- rbind.fill(all_RN_data,London_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,AUS_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,AUS_state_RN_data)
@@ -799,62 +844,21 @@ all_RN_data <- rbind.fill(all_RN_data,CAN_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,CAN_state_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,US_RN_data)
 all_RN_data <- rbind.fill(all_RN_data,US_state_RN_data)
+
+#Remove subjects under 60 years old
 all_RN_data <- all_RN_data[!(all_RN_data$q0003==1),]
 
 #Filter out incomplete surveys:
 # Survey was not completed if Q46 had no response
 all_RN_data<- all_RN_data[complete.cases(all_RN_data$q0046),]
 
+#Merge global RN and HHT datasets
 
+ehearing_data <- rbind.fill(all_RN_data,global_data)
 
-# RN data has responses in character form. Need to change to numerical factors before imputing
-#all_RN_data$q0002 <- as.character(all_RN_data$q0002)
-#all_RN_data$q0002[all_RN_data$q0002 == "Male"] <- 1
-#all_RN_data$q0002[all_RN_data$q0002 == "Female"] <- 2
-#all_RN_data$q0002 <- as.factor(all_RN_data$q0002)
+###Need to output dataset
 
-#all_RN_data$q0003 <- as.character(all_RN_data$q0003)
-#all_RN_data$q0003[grep('Under 60',all_RN_data$q0003)] <- 1
-#all_RN_data$q0003[grep('60',all_RN_data$q0003)] <- 2
-#all_RN_data$q0003[grep('65',all_RN_data$q0003)] <- 3
-#all_RN_data$q0003[grep('70',all_RN_data$q0003)] <- 4
-#all_RN_data$q0003[grep('75',all_RN_data$q0003)] <- 5
-#all_RN_data$q0003[grep('80',all_RN_data$q0003)] <- 6
-#all_RN_data$q0003[grep('85',all_RN_data$q0003)] <- 7
-#all_RN_data$q0003 <- as.factor(all_RN_data$q0003)
-#all_RN_data <- all_RN_data[!(all_RN_data$q0003==1),]
-
-#all_RN_data$q0010 <- as.character(all_RN_data$q0010)
-#all_RN_data$q0010[grep('Under',all_RN_data$q0010)] <- 1
-#all_RN_data$q0010[grep('39,999',all_RN_data$q0010)] <- 2
-#all_RN_data$q0010[grep('40,000',all_RN_data$q0010)] <- 3
-#all_RN_data$q0010[grep('60,000',all_RN_data$q0010)] <- 4
-#all_RN_data$q0010[grep('80,000',all_RN_data$q0010)] <- 5
-#all_RN_data$q0010[grep('More',all_RN_data$q0010)] <- 6
-#all_RN_data$q0010[grep('85',all_RN_data$q0010)] <- 7
-#all_RN_data$q0010[grep('Prefer',all_RN_data$q0010)] <- 8
-#all_RN_data$q0010 <- as.factor(all_RN_data$q0010)
-#all_RN_data <- all_RN_data[!(all_RN_data$q0010==8),]
-
-#all_RN_data$q0032 <- as.character(all_RN_data$q0032)
-#all_RN_data$q0032[all_RN_data$q0032 == "Yes"] <- 1
-#all_RN_data$q0032[all_RN_data$q0032 == "No"] <- 2
-#all_RN_data$q0032 <- as.factor(all_RN_data$q0032)
-
-#all_RN_data$q0042 <- as.character(all_RN_data$q0042)
-#all_RN_data$q0042[all_RN_data$q0042 == "Yes"] <- 1
-#all_RN_data$q0042[all_RN_data$q0042 == "No"] <- 2
-#all_RN_data$q0042 <- as.factor(all_RN_data$q0042)
-
-#all_RN_data$q0046 <- as.character(all_RN_data$q0046)
-#all_RN_data$q0046[grep("I do not know if I have a hearing problem",all_RN_data$q0046)] <- 1
-#all_RN_data$q0046[grep("I do not have any problems with my hearing and nobody has complained about my hearing",all_RN_data$q0046)] <- 2
-#all_RN_data$q0046[grep("I do not have any problems with my hearing but sometimes other people tell me",all_RN_data$q0046)] <- 3
-#all_RN_data$q0046[grep("I do have a hearing problem but I haven",all_RN_data$q0046)] <- 4
-#all_RN_data$q0046[grep("I do have a hearing problem and I wear hearing aids",all_RN_data$q0046)] <- 5
-#all_RN_data$q0046 <- as.factor(all_RN_data$q0046)
-
-
+write.csv(ehearing_data,paste("ehearing ",Sys.Date(),".csv",sep=""),row.names=F)
 
 hcat_impute <- predict(boot_ormod_all,all_RN_data)
 hcat_impute_test <- as.data.frame(cbind(hcat_impute,all_RN_data$country_id,all_RN_data$q0046))
