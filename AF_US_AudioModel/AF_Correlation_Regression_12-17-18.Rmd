@@ -801,6 +801,7 @@ AUS_state_RN_data$q0001 <- names(test)[AUS_state_RN_data$q0001]
 AUS_state_RN_data$country_id <- 'AUS'
 AUS_state_RN_data$state_id <- 'NSW'
 AUS_state_RN_data$city_id <- AUS_state_RN_data$q0001
+AUS_state_RN_data$city_id[which(AUS_state_RN_data$city_id=='All other')] <- 'Other AUS NSW'
 
 #Ontario- Target 2000 respondents. Info on Toronto or other areas of Ontario
 # Dataset omits location
@@ -817,6 +818,7 @@ CAN_state_RN_data$q0001 <- names(test)[CAN_state_RN_data$q0001]
 names(CAN_state_RN_data) <- names(AUS_state_RN_data[1:1522])
 CAN_state_RN_data$country_id <- 'CAN'
 CAN_state_RN_data$state_id <- CAN_state_RN_data$q0001
+CAN_state_RN_data$state_id[which(CAN_state_RN_data$state_id=='Other')] <- 'Other CAN'
 #names(CAN_RN_data) <- names(CAN_state_RN_data[-11])
 
 # Dataset omits location
@@ -850,56 +852,73 @@ all_RN_data <- all_RN_data[!(all_RN_data$q0003==1),]
 
 #Filter out incomplete surveys:
 # Survey was not completed if Q46 had no response
-all_RN_data<- all_RN_data[complete.cases(all_RN_data$q0046),]
+#all_RN_data<- all_RN_data[complete.cases(all_RN_data$q0046),]
 
 #Merge global RN and HHT datasets
 
 ehearing_data <- rbind.fill(all_RN_data,global_data)
+ehearing_data <- ehearing_data[complete.cases(ehearing_data$q0046),]
+#Remove panel and study ID information. During the import process, these two columns get spread over about 100 columns
 
+ehearing_data <- ehearing_data[,-c(1475:1570,1600)]
 ###Need to output dataset
+
+```
+
+
+
+
+
+
+
+
+```{r}
+ehearing_data$hcat_impute <- predict(boot_ormod_all,ehearing_data)
 
 write.csv(ehearing_data,paste("ehearing ",Sys.Date(),".csv",sep=""),row.names=F)
 
-hcat_impute <- predict(boot_ormod_all,all_RN_data)
-hcat_impute_test <- as.data.frame(cbind(hcat_impute,all_RN_data$country_id,all_RN_data$q0046))
-table(hcat_impute_test$hcat_impute,hcat_impute_test$V2)
-table(hcat_impute_test$V3,hcat_impute_test$V2)
 
-df=(table(hcat_impute_test$hcat_impute,hcat_impute_test$V2))
-df/colSums(df)
-grid.table(df/colSums(df))
-grid.table(round(prop.table(df,2)*100,3))
 
-#Explore response drop off
-sum(table(CAN_RN_data$q0002))
-sum(table(CAN_RN_data$q0003))
-sum(table(CAN_RN_data$q0004))
-sum(table(CAN_RN_data$q0005))
-sum(table(CAN_RN_data$q0006))
-sum(table(CAN_RN_data$q0007))
-sum(table(CAN_RN_data$q0008))
-sum(table(CAN_RN_data$q0009_0001))
-sum(table(CAN_RN_data$q0046))
 
-sum(table(CAN_state_RN_data$q0002))
-sum(table(CAN_state_RN_data$q0003))
-sum(table(CAN_state_RN_data$q0004))
-sum(table(CAN_state_RN_data$q0005))
-sum(table(CAN_state_RN_data$q0006))
-sum(table(CAN_state_RN_data$q0007))
-sum(table(CAN_state_RN_data$q0008))
-sum(table(CAN_state_RN_data$q0009_0001))
-sum(table(CAN_state_RN_data$q0046))
-
-sum(table(UK_RN_data$q0002))
-sum(table(UK_RN_data$q0003))
-sum(table(UK_RN_data$q0004))
-sum(table(UK_RN_data$q0005))
-sum(table(UK_RN_data$q0006))
-sum(table(UK_RN_data$q0007))
-sum(table(UK_RN_data$q0008))
-sum(table(UK_RN_data$q0009_0001))
-sum(table(UK_RN_data$q0046))
-
-CAN_RN_data$StartDate[is.na(CAN_RN_data$q0008)]
+# hcat_impute_test <- as.data.frame(cbind(hcat_impute,all_RN_data$country_id,all_RN_data$q0046))
+# table(hcat_impute_test$hcat_impute,hcat_impute_test$V2)
+# table(hcat_impute_test$V3,hcat_impute_test$V2)
+# 
+# df=(table(hcat_impute_test$hcat_impute,hcat_impute_test$V2))
+# df/colSums(df)
+# grid.table(df/colSums(df))
+# grid.table(round(prop.table(df,2)*100,3))
+# 
+# #Explore response drop off
+# sum(table(CAN_RN_data$q0002))
+# sum(table(CAN_RN_data$q0003))
+# sum(table(CAN_RN_data$q0004))
+# sum(table(CAN_RN_data$q0005))
+# sum(table(CAN_RN_data$q0006))
+# sum(table(CAN_RN_data$q0007))
+# sum(table(CAN_RN_data$q0008))
+# sum(table(CAN_RN_data$q0009_0001))
+# sum(table(CAN_RN_data$q0046))
+# 
+# sum(table(CAN_state_RN_data$q0002))
+# sum(table(CAN_state_RN_data$q0003))
+# sum(table(CAN_state_RN_data$q0004))
+# sum(table(CAN_state_RN_data$q0005))
+# sum(table(CAN_state_RN_data$q0006))
+# sum(table(CAN_state_RN_data$q0007))
+# sum(table(CAN_state_RN_data$q0008))
+# sum(table(CAN_state_RN_data$q0009_0001))
+# sum(table(CAN_state_RN_data$q0046))
+# 
+# sum(table(UK_RN_data$q0002))
+# sum(table(UK_RN_data$q0003))
+# sum(table(UK_RN_data$q0004))
+# sum(table(UK_RN_data$q0005))
+# sum(table(UK_RN_data$q0006))
+# sum(table(UK_RN_data$q0007))
+# sum(table(UK_RN_data$q0008))
+# sum(table(UK_RN_data$q0009_0001))
+# sum(table(UK_RN_data$q0046))
+# 
+# CAN_RN_data$StartDate[is.na(CAN_RN_data$q0008)]
 ```
