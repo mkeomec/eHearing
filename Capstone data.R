@@ -3,8 +3,8 @@ library(plyr)
 library("dplyr")
 
 
-data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
-
+#data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 data_prep <- function(data){
   
   #If thresholds are not numeric convert to numeric.
@@ -82,13 +82,16 @@ US_data <- data_prep(data)
 
 #US_data$hcat is the levels of HL. The table fun. shows who from each HL cat. picked which question in the survey.
 
-AUS_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#AUS_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#CAN_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#UK_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#US_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
-CAN_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
+AUS_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+CAN_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
+UK_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+US_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
-UK_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
-
-US_data<- read.csv("C:/Users/Rapid/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
 UK_data <- data_prep(UK_data)
 CAN_data <- data_prep(CAN_data)
@@ -467,3 +470,4 @@ Q41[13] <- table(global_data$Q41_13)[2]
 Q41[14] <- table(global_data$Q41_14)[2]
 
 names(Q41) <- c('doctor','')
+

@@ -19,7 +19,7 @@ library("MuMIn")
 library("MatchIt")
 library('fastDummies')
 library("RItools")
-library('xlsx')
+#library('xlsx')
 
 #data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
@@ -227,219 +227,220 @@ tableQ41_1 <- table(global_data$Q41_1,global_data$hcat)
 tableQ41_1 <- as.matrix(tableQ41_1)
 row.names(tableQ41_1)<-c('Did Not Select','Selected')
 colnames(tableQ41_1) <-c('Normal','Mild','Moderate','Severe')
-#BarPlots
-barplot(tableQ41_1, main="Doctor",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
 
-global_data$Q41_2 <- global_data$q0041_0002
-global_data$Q41_2[is.na(global_data$Q41_2)] <- 0
-#Making Labels for Q41_2 table
+# #BarPlots
+# barplot(tableQ41_1, main="Doctor",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_2 <- global_data$q0041_0002
+ global_data$Q41_2[is.na(global_data$Q41_2)] <- 0
+# #Making Labels for Q41_2 table
 tableQ41_2 <- table(global_data$Q41_2,global_data$hcat)
 tableQ41_2 <- as.matrix(tableQ41_2)
-row.names(tableQ41_2)<-c('Did Not Select','Selected')
-colnames(tableQ41_2) <-c('Normal','Mild','Moderate','Severe')
-#BarPlots
-barplot(tableQ41_2, main="Pamphlets in Doctor's Office (or other HCP)",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
+ row.names(tableQ41_2)<-c('Did Not Select','Selected')
+ colnames(tableQ41_2) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlots
+# barplot(tableQ41_2, main="Pamphlets in Doctor's Office (or other HCP)",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+# 
+ global_data$Q41_3 <- global_data$q0041_0003
+ global_data$Q41_3[is.na(global_data$Q41_3)] <- 0
+# #Making Labels for Q41_3 table
+ tableQ41_3 <- table(global_data$Q41_3,global_data$hcat)
+ tableQ41_3 <- as.matrix(tableQ41_3)
+ row.names(tableQ41_3)<-c('Did Not Select','Selected')
+ colnames(tableQ41_3) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_3, main="Radio Ads",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_4 <- global_data$q0041_0004
+ global_data$Q41_4[is.na(global_data$Q41_4)] <- 0
+# #Making Labels for Q41_4 table
+ tableQ41_4 <- table(global_data$Q41_4,global_data$hcat)
+ tableQ41_4 <- as.matrix(tableQ41_4)
+ row.names(tableQ41_4)<-c('Did Not Select','Selected')
+ colnames(tableQ41_4) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_4, main="Newspaper",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_5 <- global_data$q0041_0005
+ global_data$Q41_5[is.na(global_data$Q41_5)] <- 0
+# #Making Labels for Q41_5 table
+ tableQ41_5 <- table(global_data$Q41_5,global_data$hcat)
+ tableQ41_5 <- as.matrix(tableQ41_5)
+ row.names(tableQ41_5)<-c('Did Not Select','Selected')
+ colnames(tableQ41_5) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_5, main="Pamphlets that come to you in the mail",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_6 <- global_data$q0041_0006
+ global_data$Q41_6[is.na(global_data$Q41_6)] <- 0
+# #Making Labels for Q41_6 table
+ tableQ41_6 <- table(global_data$Q41_6,global_data$hcat)
+ tableQ41_6 <- as.matrix(tableQ41_6)
+ row.names(tableQ41_6)<-c('Did Not Select','Selected')
+ colnames(tableQ41_6) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_6, main="TV Ads",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_7 <- global_data$q0041_0007
+ global_data$Q41_7[is.na(global_data$Q41_7)] <- 0
+# #Making Labels for Q41_7 table
+ tableQ41_7 <- table(global_data$Q41_7,global_data$hcat)
+ tableQ41_7 <- as.matrix(tableQ41_7)
+ row.names(tableQ41_7)<-c('Did Not Select','Selected')
+ colnames(tableQ41_7) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_7, main="University Websites on the Internet",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_8 <- global_data$q0041_0008
+ global_data$Q41_8[is.na(global_data$Q41_8)] <- 0
+# #Making Labels for Q41_8 table
+ tableQ41_8 <- table(global_data$Q41_8,global_data$hcat)
+ tableQ41_8 <- as.matrix(tableQ41_8)
+ row.names(tableQ41_8)<-c('Did Not Select','Selected')
+ colnames(tableQ41_8) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_8, main="Advertisements on the Internet",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_9 <- global_data$q0041_0009
+ global_data$Q41_9[is.na(global_data$Q41_9)] <- 0
+# #Making Labels for Q41_9 table
+ tableQ41_9 <- table(global_data$Q41_9,global_data$hcat)
+ tableQ41_9 <- as.matrix(tableQ41_9)
+ row.names(tableQ41_9)<-c('Did Not Select','Selected')
+ colnames(tableQ41_9) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_9, main="Government Websites on the Internet",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+# 
+ global_data$Q41_10 <- global_data$q0041_0010
+ global_data$Q41_10[is.na(global_data$Q41_10)] <- 0
+# #Making Labels for Q41_10 table
+ tableQ41_10 <- table(global_data$Q41_10,global_data$hcat)
+ tableQ41_10 <- as.matrix(tableQ41_10)
+ row.names(tableQ41_10)<-c('Did Not Select','Selected')
+ colnames(tableQ41_10) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot
+# barplot(tableQ41_10, main="Medical Websites on the Internet",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+# 
+ global_data$Q41_11 <- global_data$q0041_0011
+ global_data$Q41_11[is.na(global_data$Q41_11)] <- 0
+# #Making Labels for Q41_11 table
+ tableQ41_11 <- table(global_data$Q41_11,global_data$hcat)
+ tableQ41_11 <- as.matrix(tableQ41_11)
+ row.names(tableQ41_11)<-c('Did Not Select','Selected')
+ colnames(tableQ41_11) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot 
+# barplot(tableQ41_11, main="Friends and Family",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_12 <- global_data$q0041_0012
+ global_data$Q41_12[is.na(global_data$Q41_12)] <- 0
+# #Making Labels for Q41_12 table
+ tableQ41_12 <- table(global_data$Q41_12,global_data$hcat)
+ tableQ41_12 <- as.matrix(tableQ41_12)
+ row.names(tableQ41_12)<-c('Did Not Select','Selected')
+ colnames(tableQ41_12) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot 
+# barplot(tableQ41_12, main="Hearing Loss Associations/Charities",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_13 <- global_data$q0041_0013
+ global_data$Q41_13[is.na(global_data$Q41_13)] <- 0
+# #Making Labels for Q41_13 table
+ tableQ41_13 <- table(global_data$Q41_13,global_data$hcat)
+ tableQ41_13 <- as.matrix(tableQ41_13)
+ row.names(tableQ41_13)<-c('Did Not Select','Selected')
+ colnames(tableQ41_13) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot 
+# barplot(tableQ41_13, main="Advertisements in Public Places",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+ global_data$Q41_14 <- global_data$q0041_0014
+ global_data$Q41_14[is.na(global_data$Q41_14)] <- 0
+# #Making Labels for Q41_14 table
+ tableQ41_14 <- table(global_data$Q41_14,global_data$hcat)
+ tableQ41_14 <- as.matrix(tableQ41_14)
+ row.names(tableQ41_14)<-c('Did Not Select','Selected')
+ colnames(tableQ41_14) <-c('Normal','Mild','Moderate','Severe')
+# #BarPlot 
+# barplot(tableQ41_14, main="Public Libraries",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
 
 
-global_data$Q41_3 <- global_data$q0041_0003
-global_data$Q41_3[is.na(global_data$Q41_3)] <- 0
-#Making Labels for Q41_3 table
-tableQ41_3 <- table(global_data$Q41_3,global_data$hcat)
-tableQ41_3 <- as.matrix(tableQ41_3)
-row.names(tableQ41_3)<-c('Did Not Select','Selected')
-colnames(tableQ41_3) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_3, main="Radio Ads",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
 
-global_data$Q41_4 <- global_data$q0041_0004
-global_data$Q41_4[is.na(global_data$Q41_4)] <- 0
-#Making Labels for Q41_4 table
-tableQ41_4 <- table(global_data$Q41_4,global_data$hcat)
-tableQ41_4 <- as.matrix(tableQ41_4)
-row.names(tableQ41_4)<-c('Did Not Select','Selected')
-colnames(tableQ41_4) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_4, main="Newspaper",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_5 <- global_data$q0041_0005
-global_data$Q41_5[is.na(global_data$Q41_5)] <- 0
-#Making Labels for Q41_5 table
-tableQ41_5 <- table(global_data$Q41_5,global_data$hcat)
-tableQ41_5 <- as.matrix(tableQ41_5)
-row.names(tableQ41_5)<-c('Did Not Select','Selected')
-colnames(tableQ41_5) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_5, main="Pamphlets that come to you in the mail",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_6 <- global_data$q0041_0006
-global_data$Q41_6[is.na(global_data$Q41_6)] <- 0
-#Making Labels for Q41_6 table
-tableQ41_6 <- table(global_data$Q41_6,global_data$hcat)
-tableQ41_6 <- as.matrix(tableQ41_6)
-row.names(tableQ41_6)<-c('Did Not Select','Selected')
-colnames(tableQ41_6) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_6, main="TV Ads",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_7 <- global_data$q0041_0007
-global_data$Q41_7[is.na(global_data$Q41_7)] <- 0
-#Making Labels for Q41_7 table
-tableQ41_7 <- table(global_data$Q41_7,global_data$hcat)
-tableQ41_7 <- as.matrix(tableQ41_7)
-row.names(tableQ41_7)<-c('Did Not Select','Selected')
-colnames(tableQ41_7) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_7, main="University Websites on the Internet",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_8 <- global_data$q0041_0008
-global_data$Q41_8[is.na(global_data$Q41_8)] <- 0
-#Making Labels for Q41_8 table
-tableQ41_8 <- table(global_data$Q41_8,global_data$hcat)
-tableQ41_8 <- as.matrix(tableQ41_8)
-row.names(tableQ41_8)<-c('Did Not Select','Selected')
-colnames(tableQ41_8) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_8, main="Advertisements on the Internet",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_9 <- global_data$q0041_0009
-global_data$Q41_9[is.na(global_data$Q41_9)] <- 0
-#Making Labels for Q41_9 table
-tableQ41_9 <- table(global_data$Q41_9,global_data$hcat)
-tableQ41_9 <- as.matrix(tableQ41_9)
-row.names(tableQ41_9)<-c('Did Not Select','Selected')
-colnames(tableQ41_9) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_9, main="Government Websites on the Internet",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-
-global_data$Q41_10 <- global_data$q0041_0010
-global_data$Q41_10[is.na(global_data$Q41_10)] <- 0
-#Making Labels for Q41_10 table
-tableQ41_10 <- table(global_data$Q41_10,global_data$hcat)
-tableQ41_10 <- as.matrix(tableQ41_10)
-row.names(tableQ41_10)<-c('Did Not Select','Selected')
-colnames(tableQ41_10) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot
-barplot(tableQ41_10, main="Medical Websites on the Internet",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-
-global_data$Q41_11 <- global_data$q0041_0011
-global_data$Q41_11[is.na(global_data$Q41_11)] <- 0
-#Making Labels for Q41_11 table
-tableQ41_11 <- table(global_data$Q41_11,global_data$hcat)
-tableQ41_11 <- as.matrix(tableQ41_11)
-row.names(tableQ41_11)<-c('Did Not Select','Selected')
-colnames(tableQ41_11) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot 
-barplot(tableQ41_11, main="Friends and Family",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_12 <- global_data$q0041_0012
-global_data$Q41_12[is.na(global_data$Q41_12)] <- 0
-#Making Labels for Q41_12 table
-tableQ41_12 <- table(global_data$Q41_12,global_data$hcat)
-tableQ41_12 <- as.matrix(tableQ41_12)
-row.names(tableQ41_12)<-c('Did Not Select','Selected')
-colnames(tableQ41_12) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot 
-barplot(tableQ41_12, main="Hearing Loss Associations/Charities",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_13 <- global_data$q0041_0013
-global_data$Q41_13[is.na(global_data$Q41_13)] <- 0
-#Making Labels for Q41_13 table
-tableQ41_13 <- table(global_data$Q41_13,global_data$hcat)
-tableQ41_13 <- as.matrix(tableQ41_13)
-row.names(tableQ41_13)<-c('Did Not Select','Selected')
-colnames(tableQ41_13) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot 
-barplot(tableQ41_13, main="Advertisements in Public Places",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-global_data$Q41_14 <- global_data$q0041_0014
-global_data$Q41_14[is.na(global_data$Q41_14)] <- 0
-#Making Labels for Q41_14 table
-tableQ41_14 <- table(global_data$Q41_14,global_data$hcat)
-tableQ41_14 <- as.matrix(tableQ41_14)
-row.names(tableQ41_14)<-c('Did Not Select','Selected')
-colnames(tableQ41_14) <-c('Normal','Mild','Moderate','Severe')
-#BarPlot 
-barplot(tableQ41_14, main="Public Libraries",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-
-
-#makes a grid table
-grid.table(table(US_data$provider,US_data$hcat))
-(table(global_data$HAold,global_data$hcat))
-
-# Stacked Bar Plot with Colors and Legend (Copy and paste into console to have appear)
-barplot(tableQ41_14, main="Public Libraries",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14))
-
-# Grouped Bar Plot(Copy and paste into the Console to have appear)
-barplot(tableQ41_14, main="Public Libraries",
-        xlab="Categories of Hearing Loss", col=c("red","blue"),
-        ylim=c(0,1000),
-        ylab = "Number of Participants",
-        legend = rownames(tableQ41_14), beside=TRUE)
-
-# Percentage BarPlot Example
+# #makes a grid table
+# grid.table(table(US_data$provider,US_data$hcat))
+# (table(global_data$HAold,global_data$hcat))
+# 
+# # Stacked Bar Plot with Colors and Legend (Copy and paste into console to have appear)
+# barplot(tableQ41_14, main="Public Libraries",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14))
+# 
+# # Grouped Bar Plot(Copy and paste into the Console to have appear)
+# barplot(tableQ41_14, main="Public Libraries",
+#         xlab="Categories of Hearing Loss", col=c("red","blue"),
+#         ylim=c(0,1000),
+#         ylab = "Number of Participants",
+#         legend = rownames(tableQ41_14), beside=TRUE)
+# 
+# # Percentage BarPlot Example
 
 
 #Reference Example For Barplot
@@ -575,12 +576,14 @@ Graph_Q41 <- function(data) {
     scale_x_discrete(   limits=rev(c(t(Q41[1]))))+ 
     scale_y_continuous (limits=c(0,100) )
 return(Q41plot)
-  
 } 
 
 #Q41 Plotting individual countries
 USQ41plot<-Graph_Q41(US_data)
-USQ41plot + ggtitle("Q41 US In-Person Data") 
+USQ41plot + ggtitle("Q41 US In-Person Data")
+
+
+USQ41plot +geom_text(aes(label=round(USQ41plot$data$Responses,2)),hjust=-.8)
 
 UKQ41plot<-Graph_Q41(UK_data)
 UKQ41plot + ggtitle("Q41 UK In-Person Data")
@@ -609,7 +612,6 @@ hcat3Q41plot + ggtitle("Q41 Moderate Hearing Loss Data")
 hcat4Q41plot<-Graph_Q41(global_4)
 hcat4Q41plot + ggtitle("Q41 Severe Hearing Loss Data") 
 
-
 #Sum of Responses (or responses per person)
 global_1$q0041_0001
 sum(global_1$q0041_0001)
@@ -624,8 +626,23 @@ sum(AUS_data[88:101],na.rm=T)/nrow(AUS_data)
 sum(UK_data[92:105],na.rm=T)/nrow(UK_data)
 sum(CAN_data[92:105],na.rm=T)/nrow(CAN_data)
 
+## Stratify by NH, HL-HA, and HL +HA
+global_NH <- global_data%>%filter(q0046 %in% c(1,2,3))
+global_HL <- global_data%>%filter(q0046==4)
+global_HLHA <- global_data%>%filter(q0046==5)
 
+# Plot bar graph by hearing loss type 
+hear1plot<-Graph_Q41(global_NH)
+hear1plot + ggtitle("Normal Hearing") +
+geom_text(aes(label=round(hear1plot$data$Responses,2)),hjust=-.8)
 
+hear2plot<-Graph_Q41(global_HL)
+hear2plot + ggtitle("Hearing loss without hearing aid") +
+geom_text(aes(label=round(hear2plot$data$Responses,2)),hjust=-.8)
+
+hear3plot<-Graph_Q41(global_HLHA)
+hear3plot + ggtitle("Hearing loss with hearing aid") +
+geom_text(aes(label=round(hear3plot$data$Responses,2)),hjust=-.8)
 
 ### RADAR PLOTS
 
@@ -940,5 +957,5 @@ radarchart(combined_age_radar, axistype = 1,
 legend("topright",inset = 0.05,legend = rownames(combined_age_radar[-c(1,2),]), bty = "n", pch=c(1, 2, 9,12,3,4), col=colors_border , text.col = "black", cex=1, pt.cex=1.5,x.intersp = 0.4, y.intersp = .6)
 
 
-write.xlsx(combined_radar,'C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/combined_radar.xlsx')
-write.xlsx(combined_age_radar,'C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/combined_age_radar.xlsx')
+#write.xlsx(combined_radar,'C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/combined_radar.xlsx')
+#write.xlsx(combined_age_radar,'C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/combined_age_radar.xlsx')
