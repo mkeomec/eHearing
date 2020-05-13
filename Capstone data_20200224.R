@@ -25,7 +25,7 @@ library("RItools")
 #data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 #data<- read.csv("Documents/Capstone/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
-data<- read.csv("C:/Users/mkeomec/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 data_prep <- function(data){
   
   #If thresholds are not numeric convert to numeric.
@@ -110,10 +110,10 @@ US_data <- data_prep(data)
 #UK_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 #US_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
-AUS_data<- read.csv("C:/Users/mkeomec/Documents/GitHub/eHearing/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
-CAN_data<- read.csv("C:/Users/mkeomec/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
-UK_data<- read.csv("C:/Users/mkeomec/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
-US_data<- read.csv("C:/Users/mkeomec/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+AUS_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
+CAN_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
+UK_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+US_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
 UK_data <- data_prep(UK_data)
 CAN_data <- data_prep(CAN_data)
@@ -706,14 +706,14 @@ legend("topright",inset = 0.1,legend = rownames(combined_radar[-c(1,2),]), bty =
 
 
 #UK_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
-UK_RN_data<- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
+UK_RN_data<- read.spss("D:/Dropbox/eHearing manuscript/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
 test <- attr(UK_RN_data$q0001,'value.labels')
 UK_RN_data$q0001 <- names(test)[UK_RN_data$q0001]
 UK_RN_data$country_id <- 'UK'
 UK_RN_data$region_id <- UK_RN_data$q0001
 
 #UK_state_RN_data <- read.spss("C:/Users/mkeomec/eHearing manuscript//UK England Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-UK_state_RN_data <- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/UK England Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+UK_state_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/UK England Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(UK_state_RN_data$q0001,'value.labels')
 UK_state_RN_data$q0001 <- names(test)[UK_state_RN_data$q0001]
 UK_state_RN_data$country_id <- 'UK'
@@ -721,7 +721,7 @@ UK_state_RN_data$region_id <- 'England'
 UK_state_RN_data$state_id <- UK_state_RN_data$q0001
 
 # London_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/UK London Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-London_RN_data <- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/UK London Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+London_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/UK London Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(London_RN_data$q0001,'value.labels')
 London_RN_data$q0001 <- names(test)[London_RN_data$q0001]
 London_RN_data$country_id <- 'UK'
@@ -729,14 +729,14 @@ UK_state_RN_data$region_id <- 'England'
 London_RN_data$city_id <-London_RN_data$q0001
 
 # AUS_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-AUS_RN_data <- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+AUS_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(AUS_RN_data$q0001,'value.labels')
 AUS_RN_data$q0001 <- names(test)[AUS_RN_data$q0001]
 AUS_RN_data$country_id <- 'AUS'
 AUS_RN_data$state_id <- AUS_RN_data$q0001
 
 # AUS_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-AUS_state_RN_data <- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+AUS_state_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(AUS_state_RN_data$q0001,'value.labels')
 AUS_state_RN_data$q0001 <- names(test)[AUS_state_RN_data$q0001]
 AUS_state_RN_data$country_id <- 'AUS'
@@ -747,7 +747,7 @@ AUS_state_RN_data$city_id[which(AUS_state_RN_data$city_id=='All other')] <- 'Oth
 #Ontario- Target 2000 respondents. Info on Toronto or other areas of Ontario
 # Dataset omits location
 # CAN_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-CAN_RN_data<- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+CAN_RN_data<- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 CAN_RN_data$q0001_new <- NA
 CAN_RN_data <- CAN_RN_data[,c(1:10,1522,11:1521)]
 names(CAN_RN_data) <- names(AUS_state_RN_data[1:1522])
@@ -755,7 +755,7 @@ CAN_RN_data$country_id <- 'CAN'
 CAN_RN_data$state_id <- 'Ontario'
 
 # CAN_state_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-CAN_state_RN_data<- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+CAN_state_RN_data<- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(CAN_state_RN_data$q0001,'value.labels')
 CAN_state_RN_data$q0001 <- names(test)[CAN_state_RN_data$q0001]
 names(CAN_state_RN_data) <- names(AUS_state_RN_data[1:1522])
@@ -766,7 +766,7 @@ CAN_state_RN_data$state_id[which(CAN_state_RN_data$state_id=='Other')] <- 'Other
 
 # Dataset omits location
 # US_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-US_RN_data <- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+US_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 US_RN_data$q0001_new <- NA
 US_RN_data <- US_RN_data[,c(1:10,1522,11:1521)]
 names(US_RN_data) <- names(CAN_state_RN_data[1:1522])
@@ -774,7 +774,7 @@ US_RN_data$country_id <- 'US'
 
 # Dataset omits location
 # US_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-US_state_RN_data <- read.spss("C:/Users/mkeomec/Dropbox/eHearing manuscript/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+US_state_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 US_state_RN_data$q0001_new <- NA
 US_state_RN_data <- US_state_RN_data[,c(1:10,1523,11:1522)]
 #q0003  in "USA WA" Research now dataset is are you a current resident of WA. Remove this Question
@@ -963,8 +963,23 @@ legend("topright",inset = 0.05,legend = rownames(combined_age_radar[-c(1,2),]), 
 
 
 ### In Person
-global_data %>%group_by(country) %>% summarise(BEPTA=median(BEPTA,na.rm=TRUE))
-global_data %>%group_by(country) %>% summarise(BEPTA=IQR(BEPTA,na.rm=TRUE))
+## By country,age and gender
+
+bepta_ip<- global_data %>%group_by(country,q0003,q0002) %>% summarise(BEPTA=median(BEPTA,na.rm=TRUE))
+bepta_ip[,5:8] <- global_data %>%group_by(country,q0003,q0002) %>% summarise(BEPTA=IQR(BEPTA,na.rm=TRUE))
+global_data %>%group_by(country,q0003) %>% summarise(BEPTA=IQR(BEPTA,na.rm=TRUE))
+bepta_ip <- bepta_ip[,c(1:4,8)]
+tbepta_ip <- t(bepta_ip)
+
+## By country, and gender
+bepta_ip<- global_data %>%group_by(country,q0002) %>% summarise(BEPTA=median(BEPTA,na.rm=TRUE))
+bepta_ip[,4:6] <- global_data %>%group_by(country,q0002) %>% summarise(BEPTA=IQR(BEPTA,na.rm=TRUE))
+bepta_ip <- bepta_ip[,c(1:3,6)]
+tbepta_ip <- t(bepta_ip)
+
+
+
+
 table(global_data$country,global_data$q0002)
 
 table(global_data$country,global_data$q0003)
