@@ -998,4 +998,13 @@ table(global_data$region_id,global_data$q0003)
 table(global_data$state_id,global_data$q0003)
 table(global_data$city_id,global_data$q0003)
 
+test <- table(all_RN_data$q0046)
+addmargins(test)
 
+all_RN_data$q0041 <- rowSums(all_RN_data[92:105],na.rm=TRUE)
+test <- table(all_RN_data$q0041)
+addmargins(test)
+
+global_data$q0041 <- rowSums(global_data[92:105],na.rm=TRUE)
+test <- table(global_data$q0041)
+addmargins(test)
