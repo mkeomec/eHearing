@@ -110,6 +110,8 @@ US_data <- data_prep(data)
 #UK_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 #US_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
+# US has thresholds that come from manual audiometry?
+
 AUS_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
 CAN_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
 UK_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
