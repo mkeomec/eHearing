@@ -691,6 +691,9 @@ row.names(combined_radar) <- c("max","min","US","UK","AUS","CAN")
 #Run this to produce Radarplot
 colors_border=c(("blue"), ("red") ,("purple"),("black"))
 #colors_in=c( rgb(0,0,1,0.1), rgb(1,0,0,0.1) , rgb(0,1,0,0.1),rgb(1,1,1,0.1) )
+
+
+png(filename="test.png")
 radarchart(combined_radar, axistype = 1,
            pcol=colors_border ,
            plwd=1 ,
@@ -705,7 +708,7 @@ radarchart(combined_radar, axistype = 1,
 )
 #Legend
 legend("topright",inset = 0.1,legend = rownames(combined_radar[-c(1,2),]), bty = "n", pch=c(1, 2, 9,12), col=colors_border , text.col = "black", cex=1, pt.cex=1.5,x.intersp = .1, y.intersp = .3)
-
+dev.off()
 
 
 
