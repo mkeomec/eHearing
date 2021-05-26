@@ -634,6 +634,7 @@ global_NH <- global_data%>%filter(q0046 %in% c(1,2,3))
 global_HL <- global_data%>%filter(q0046==4)
 global_HLHA <- global_data%>%filter(q0046==5)
 
+
 # Plot bar graph by hearing loss type 
 png('HL.png', pointsize=10, width=2000, height=1000, res=300)
 hear1plot<-Graph_Q41(global_NH)
@@ -1031,6 +1032,39 @@ RN_hear_impute_2 <- RN_hear_impute_data%>%filter(hcat_impute==2)
 RN_hear_impute_3 <- RN_hear_impute_data%>%filter(hcat_impute==3)
 RN_hear_impute_4 <- RN_hear_impute_data%>%filter(hcat_impute==4)
 
+#Graphing Q41 Function
+Graph_Q41 <- function(data) {
+  Q41 <- as.data.frame(table(data$Q41_1)[2]/nrow(data)*100)
+  Q41[2] <- table(data$Q41_10)[2]/nrow(data)*100
+  Q41[3] <- table(data$Q41_9)[2]/nrow(data)*100
+  Q41[4] <- table(data$Q41_12)[2]/nrow(data)*100
+  Q41[5] <- table(data$Q41_2)[2]/nrow(data)*100
+  Q41[6] <- table(data$Q41_11)[2]/nrow(data)*100
+  Q41[7] <- table(data$Q41_5)[2]/nrow(data)*100
+  Q41[8] <- table(data$Q41_6)[2]/nrow(data)*100
+  Q41[9] <- table(data$Q41_4)[2]/nrow(data)*100
+  Q41[10] <- table(data$Q41_13)[2]/nrow(data)*100
+  Q41[11] <- table(data$Q41_7)[2]/nrow(data)*100
+  Q41[12] <- table(data$Q41_14)[2]/nrow(data)*100
+  Q41[13] <- table(data$Q41_3)[2]/nrow(data)*100
+  Q41[14] <- table(data$Q41_8)[2]/nrow(data)*100
+  
+  Q41<-t(Q41)
+  Q41 <- as.data.frame(Q41)
+  Q41[,2] <- Q41
+  Q41[,1] <- c('Doctor','Medical Websites', 'Government Websites', 'Hearing Loss Associations/Charities','TV Ads','Friends and Family', 'Mailed Pamphlets','Pamphlets in HCP Office','Newspaper',  'Ads in Public Places','University Websites', 'Public Libraries','Radio Ads', 'Internet Ads')
+  names(Q41) <- c('Question','Responses')
+  #Q41<-(Q41[order(-Q41$Responses),])
+  
+  #Organizing Q41  In-Person Data into horizontal graph
+  Q41plot <- ggplot(data=Q41, aes(x=Question,y=Responses)) +   
+    geom_bar(,stat="identity") +    
+    coord_flip()+ 
+    scale_x_discrete(   limits=rev(c(t(Q41[1]))))+ 
+    scale_y_continuous (limits=c(0,100) )
+  return(Q41plot)
+} 
+
 hcat1Q41plot<-Graph_Q41(RN_hear_impute_1)
 hcat1Q41plot + ggtitle("Q41 Normal Hearing Data")+
 geom_text(aes(label=round(hcat1Q41plot$data$Responses,0)),hjust=-.8)
@@ -1047,6 +1081,15 @@ hcat4Q41plot<-Graph_Q41(RN_hear_impute_4)
 hcat4Q41plot + ggtitle("Q41 Severe Hearing Loss Data") +
 geom_text(aes(label=round(hcat4Q41plot$data$Responses,0)),hjust=-.8)
 
+
+#######################################################################################
+### Figure 10 ###
+
+## Stratify by NH, HL-HA, and HL +HA
+## 
+global_NH <- RN_hear_impute_data%>%filter(q0046 %in% c(1,2,3))
+global_HL <- RN_hear_impute_data%>%filter(q0046==4)
+global_HLHA <- RN_hear_impute_data%>%filter(q0046==5)
 
 # Plot bar graph by hearing loss type 
 png('HL.png', pointsize=10, width=2000, height=1000, res=300)

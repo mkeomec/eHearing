@@ -21,11 +21,11 @@ library('fastDummies')
 library("RItools")
 #library('xlsx')
 
-#data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
-#data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
-#data<- read.csv("Documents/Capstone/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
-data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 data_prep <- function(data){
   
   #If thresholds are not numeric convert to numeric.
@@ -105,17 +105,17 @@ US_data <- data_prep(data)
 
 #US_data$hcat is the levels of HL. The table fun. shows who from each HL cat. picked which question in the survey.
 
-#AUS_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
-#CAN_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
-#UK_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
-#US_data<- read.csv("C:/Users/cwbishop/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#AUS_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#CAN_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#UK_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+#US_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
 # US has thresholds that come from manual audiometry?
 
-AUS_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
-CAN_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
-UK_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
-US_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+AUS_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_AU_UNI_Survey+HT_12.13.17.csv", header=T, na.strings=c("#NULL!",'90NR'))
+CAN_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_CAN_InPerson_AllSubs_Survey+Audio_CLEAN_07.25.2018.csv", header=T, na.strings=c("#NULL!",'90NR'))
+UK_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_UK_InPerson_AllSurvey+AllAudios_CLEAN_7.26.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
+US_data<- read.csv("C:/Users/MQ20170699/Desktop/Kelly Tremblay/GitHub/eHearing-master/AF_US_UNI_AllSubsSurvey+Audio_2.20.18.csv", header=T, na.strings=c("#NULL!",'90NR'))
 
 UK_data <- data_prep(UK_data)
 CAN_data <- data_prep(CAN_data)
@@ -505,8 +505,9 @@ Q41<-(Q41[order(-Q41$Responses),])
 ggplot(data=Q41, aes(x=Question,y=Responses)) +   
   geom_bar(,stat="identity") +    
   coord_flip()+ 
-  ggtitle("Q41 Global In-Person Data") +
-  scale_x_discrete(   limits=rev(c(t(Q41[1]))))
+  ggtitle("Global In-Person Data") +
+  scale_x_discrete(   limits=rev(c(t(Q41[1])))) +
+  tiff("Trial.tiff", width = 8, height = 4, units = 'in', res = 300)
 
 #Country Data Stratification. 
 data_stratify <- function(data){  
@@ -573,7 +574,7 @@ Graph_Q41 <- function(data) {
   Q41<-(Q41[order(-Q41$Responses),])
   
   #Organizing Q41  In-Person Data into horizontal graph
-  Q41plot <- ggplot(data=Q41, aes(x=Question,y=Responses)) +   
+  Q41plot <- ggplot(data=Q41, aes(x=Question,y=Responses,label = scales::percent(Responses))) +   
     geom_bar(,stat="identity") +    
     coord_flip()+ 
     scale_x_discrete(   limits=rev(c(t(Q41[1]))))+ 
@@ -603,17 +604,18 @@ global_2 <- global_data%>%filter(hcat==2)
 global_3 <- global_data%>%filter(hcat==3)
 global_4 <- global_data%>%filter(hcat==4)
 
+##originally Q41 Normal Hearing Data
 hcat1Q41plot<-Graph_Q41(global_1)
-hcat1Q41plot + ggtitle("Q41 Normal Hearing Data")
+hcat1Q41plot + ggtitle("Normal Hearing Data")
 
 hcat2Q41plot<-Graph_Q41(global_2)
-hcat2Q41plot + ggtitle("Q41 Mild Hearing Loss Data") 
+hcat2Q41plot + ggtitle("Mild Hearing Loss Data") 
 
 hcat3Q41plot<-Graph_Q41(global_3)
-hcat3Q41plot + ggtitle("Q41 Moderate Hearing Loss Data") 
+hcat3Q41plot + ggtitle("Moderate Hearing Loss Data") 
 
 hcat4Q41plot<-Graph_Q41(global_4)
-hcat4Q41plot + ggtitle("Q41 Severe Hearing Loss Data") 
+hcat4Q41plot + ggtitle("Severe Hearing Loss Data") 
 
 #Sum of Responses (or responses per person)
 global_1$q0041_0001
@@ -635,23 +637,17 @@ global_HL <- global_data%>%filter(q0046==4)
 global_HLHA <- global_data%>%filter(q0046==5)
 
 # Plot bar graph by hearing loss type 
-png('HL.png', pointsize=10, width=2000, height=1000, res=300)
 hear1plot<-Graph_Q41(global_NH)
 hear1plot + ggtitle("Normal Hearing") +
-geom_text(aes(label=round(hear1plot$data$Responses,0)),hjust=-.8)
-dev.off()
+geom_text(aes(label=round(hear1plot$data$Responses,2)),hjust=-.8)
 
-png('HLwoAID.png', pointsize=10, width=2000, height=1000, res=300)
 hear2plot<-Graph_Q41(global_HL)
 hear2plot + ggtitle("Hearing loss without hearing aid") +
-geom_text(aes(label=round(hear2plot$data$Responses,0)),hjust=-.8)
-dev.off()
+geom_text(aes(label=round(hear2plot$data$Responses,2)),hjust=-.8)
 
-png('HLwAID.png', pointsize=10, width=2000, height=1000, res=300)
 hear3plot<-Graph_Q41(global_HLHA)
 hear3plot + ggtitle("Hearing loss with hearing aid") +
-geom_text(aes(label=round(hear3plot$data$Responses,0)),hjust=-.8)
-dev.off()
+geom_text(aes(label=round(hear3plot$data$Responses,2)),hjust=-.8)
 
 ### RADAR PLOTS
 
@@ -689,26 +685,26 @@ combined_radar<-rbind(combined_radar,CAN_radar[3,])
 row.names(combined_radar) <- c("max","min","US","UK","AUS","CAN")
 
 #Run this to produce Radarplot
+##Originally Hearing Healthcare Preferences (Q41) In-Person by Country
 colors_border=c(("blue"), ("red") ,("purple"),("black"))
-#colors_in=c( rgb(0,0,1,0.1), rgb(1,0,0,0.1) , rgb(0,1,0,0.1),rgb(1,1,1,0.1) )
-
-
-png(filename="test.png")
+# colors_in=c( rgb(0,0,1,0.1), rgb(1,0,0,0.1) , rgb(0,1,0,0.1),rgb(1,1,1,0.1) )
 radarchart(combined_radar, axistype = 1,
            pcol=colors_border ,
-           plwd=1 ,
+           plwd=3 ,
            plty=2, 
            pty= c(1, 2, 9,12),
            # pfcol=colors_in ,
-           title = "Hearing Healthcare Preferences (Q41) In-Person by Country",
+           title = "Hearing Healthcare Preferences In-Person by Country",
            #custom the grid
            cglcol="black", cglty=5, axislabcol="black", caxislabels=seq(0,100,25), cglwd=0.5,
            #custom labels
-           vlcex=0.8 
+           vlcex=.8,
+
+        
 )
 #Legend
-legend("topright",inset = 0.1,legend = rownames(combined_radar[-c(1,2),]), bty = "n", pch=c(1, 2, 9,12), col=colors_border , text.col = "black", cex=1, pt.cex=1.5,x.intersp = .1, y.intersp = .3)
-dev.off()
+legend("topright",inset = -0.02,legend = rownames(combined_radar[-c(1,2),]), bty = "n", pch=c(1, 2, 9,12), col=colors_border , text.col = "black", cex=.8, pt.cex=1.8,x.intersp = .3, y.intersp = .8)
+
 
 
 
@@ -716,38 +712,38 @@ dev.off()
 
 
 
-#UK_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
-UK_RN_data<- read.spss("D:/Dropbox/eHearing manuscript/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
+#UK_RN_data<- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
+UK_RN_data<- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/U.K. eHearing Study - Online Panel Survey.sav", to.data.frame=TRUE, use.value.labels=FALSE)
 test <- attr(UK_RN_data$q0001,'value.labels')
 UK_RN_data$q0001 <- names(test)[UK_RN_data$q0001]
 UK_RN_data$country_id <- 'UK'
 UK_RN_data$region_id <- UK_RN_data$q0001
 
-#UK_state_RN_data <- read.spss("C:/Users/mkeomec/eHearing manuscript//UK England Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-UK_state_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/UK England Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+#UK_state_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/UK England Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+UK_state_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/UK England Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(UK_state_RN_data$q0001,'value.labels')
 UK_state_RN_data$q0001 <- names(test)[UK_state_RN_data$q0001]
 UK_state_RN_data$country_id <- 'UK'
 UK_state_RN_data$region_id <- 'England'
 UK_state_RN_data$state_id <- UK_state_RN_data$q0001
 
-# London_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Kelly and Michael/UK London Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-London_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/UK London Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+# London_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/UK London Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+London_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/UK London Online.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(London_RN_data$q0001,'value.labels')
 London_RN_data$q0001 <- names(test)[London_RN_data$q0001]
 London_RN_data$country_id <- 'UK'
 UK_state_RN_data$region_id <- 'England'
 London_RN_data$city_id <-London_RN_data$q0001
 
-# AUS_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-AUS_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+# AUS_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+AUS_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study-Australia-Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(AUS_RN_data$q0001,'value.labels')
 AUS_RN_data$q0001 <- names(test)[AUS_RN_data$q0001]
 AUS_RN_data$country_id <- 'AUS'
 AUS_RN_data$state_id <- AUS_RN_data$q0001
 
-# AUS_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-AUS_state_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+# AUS_state_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+AUS_state_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - NSW - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(AUS_state_RN_data$q0001,'value.labels')
 AUS_state_RN_data$q0001 <- names(test)[AUS_state_RN_data$q0001]
 AUS_state_RN_data$country_id <- 'AUS'
@@ -757,16 +753,16 @@ AUS_state_RN_data$city_id[which(AUS_state_RN_data$city_id=='All other')] <- 'Oth
 
 #Ontario- Target 2000 respondents. Info on Toronto or other areas of Ontario
 # Dataset omits location
-# CAN_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-CAN_RN_data<- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+# CAN_RN_data<- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+CAN_RN_data<- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - CanadaPanel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 CAN_RN_data$q0001_new <- NA
 CAN_RN_data <- CAN_RN_data[,c(1:10,1522,11:1521)]
 names(CAN_RN_data) <- names(AUS_state_RN_data[1:1522])
 CAN_RN_data$country_id <- 'CAN'
 CAN_RN_data$state_id <- 'Ontario'
 
-# CAN_state_RN_data<- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-CAN_state_RN_data<- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+# CAN_state_RN_data<- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+CAN_state_RN_data<- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study of Alberta_BC_Quebec_Other_Canada_Panel - 2.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 test <- attr(CAN_state_RN_data$q0001,'value.labels')
 CAN_state_RN_data$q0001 <- names(test)[CAN_state_RN_data$q0001]
 names(CAN_state_RN_data) <- names(AUS_state_RN_data[1:1522])
@@ -776,16 +772,16 @@ CAN_state_RN_data$state_id[which(CAN_state_RN_data$state_id=='Other')] <- 'Other
 #names(CAN_RN_data) <- names(CAN_state_RN_data[-11])
 
 # Dataset omits location
-# US_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-US_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+# US_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+US_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - USA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 US_RN_data$q0001_new <- NA
 US_RN_data <- US_RN_data[,c(1:10,1522,11:1521)]
 names(US_RN_data) <- names(CAN_state_RN_data[1:1522])
 US_RN_data$country_id <- 'US'
 
 # Dataset omits location
-# US_state_RN_data <- read.spss("C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/2018 SPSS datasets/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
-US_state_RN_data <- read.spss("D:/Dropbox/eHearing manuscript/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+# US_state_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
+US_state_RN_data <- read.spss("C:/Users/MQ20170699/Desktop/Kelly Tremblay/Data/eHearing Datasets 27.10.2020/eHearing Study - USA WA - Panel.sav", to.data.frame=TRUE,use.value.labels=FALSE)
 US_state_RN_data$q0001_new <- NA
 US_state_RN_data <- US_state_RN_data[,c(1:10,1523,11:1522)]
 #q0003  in "USA WA" Research now dataset is are you a current resident of WA. Remove this Question
@@ -806,8 +802,7 @@ all_RN_data <- rbind.fill(all_RN_data,US_state_RN_data)
 #Remove subjects under 60 years old
 all_RN_data <- all_RN_data[!(all_RN_data$q0003==1),]
 
-#global_data <- all_RN_data
-
+global_data <- all_RN_data
 radarplot<-function(data){
     
     data<- data[,c('q0041_0001','q0041_0002','q0041_0003','q0041_0004','q0041_0005','q0041_0006','q0041_0007','q0041_0008','q0041_0009','q0041_0010','q0041_0011','q0041_0012','q0041_0013','q0041_0014')]
@@ -973,107 +968,6 @@ legend("topright",inset = 0.05,legend = rownames(combined_age_radar[-c(1,2),]), 
 #write.xlsx(combined_radar,'C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/combined_radar.xlsx')
 #write.xlsx(combined_age_radar,'C:/Users/cwbishop/Documents/dropbox/Dropbox/Work/UW BandBlab/Studies/eHearing/combined_age_radar.xlsx')
 
-####################################################################################################################################################
-# Figure 9 code
-####################################################################################################################################################
-RN_hear_impute_data<- read.csv("C:/Users/Michael Lee/Documents/GitHub/eHearing/ehearing_all_4-12-2019v1.csv", header=T, na.strings=c("#NULL!",'90NR'))
-RN_hear_impute_data=RN_hear_impute_data[,c("RespondentID","hcat_impute")]
-RN_hear_impute_data<- merge(all_RN_data,RN_hear_impute_data,by.x = "RespondentID",by.y ="RespondentID")
-
-
-#looking at q0041: Where would you prefer to get information about hearing health care? Check all that apply. Making it so we pick up yes/no responses 
-RN_hear_impute_data$Q41_1 <- RN_hear_impute_data$q0041_0001
-RN_hear_impute_data$Q41_1[is.na(RN_hear_impute_data$Q41_1)] <- 0
-
-RN_hear_impute_data$Q41_2 <- RN_hear_impute_data$q0041_0002
-RN_hear_impute_data$Q41_2[is.na(RN_hear_impute_data$Q41_2)] <- 0
-
-RN_hear_impute_data$Q41_3 <- RN_hear_impute_data$q0041_0003
-RN_hear_impute_data$Q41_3[is.na(RN_hear_impute_data$Q41_3)] <- 0
-
-RN_hear_impute_data$Q41_4 <- RN_hear_impute_data$q0041_0004
-RN_hear_impute_data$Q41_4[is.na(RN_hear_impute_data$Q41_4)] <- 0
-
-RN_hear_impute_data$Q41_5 <- RN_hear_impute_data$q0041_0005
-RN_hear_impute_data$Q41_5[is.na(RN_hear_impute_data$Q41_5)] <- 0
-
-RN_hear_impute_data$Q41_6 <- RN_hear_impute_data$q0041_0006
-RN_hear_impute_data$Q41_6[is.na(RN_hear_impute_data$Q41_6)] <- 0
-
-RN_hear_impute_data$Q41_7 <- RN_hear_impute_data$q0041_0007
-RN_hear_impute_data$Q41_7[is.na(RN_hear_impute_data$Q41_7)] <- 0
-
-RN_hear_impute_data$Q41_8 <- RN_hear_impute_data$q0041_0008
-RN_hear_impute_data$Q41_8[is.na(RN_hear_impute_data$Q41_8)] <- 0
-
-RN_hear_impute_data$Q41_9 <- RN_hear_impute_data$q0041_0009
-RN_hear_impute_data$Q41_9[is.na(RN_hear_impute_data$Q41_9)] <- 0
-
-RN_hear_impute_data$Q41_10 <- RN_hear_impute_data$q0041_0010
-RN_hear_impute_data$Q41_10[is.na(RN_hear_impute_data$Q41_10)] <- 0
-
-RN_hear_impute_data$Q41_11 <- RN_hear_impute_data$q0041_0011
-RN_hear_impute_data$Q41_11[is.na(RN_hear_impute_data$Q41_11)] <- 0
-# 
-RN_hear_impute_data$Q41_12 <- RN_hear_impute_data$q0041_0012
-RN_hear_impute_data$Q41_12[is.na(RN_hear_impute_data$Q41_12)] <- 0
-
-
-RN_hear_impute_data$Q41_13 <- RN_hear_impute_data$q0041_0013
-RN_hear_impute_data$Q41_13[is.na(RN_hear_impute_data$Q41_13)] <- 0
- 
-RN_hear_impute_data$Q41_14 <- RN_hear_impute_data$q0041_0014
-RN_hear_impute_data$Q41_14[is.na(RN_hear_impute_data$Q41_14)] <- 0
-
-#stratifying hcat 
-RN_hear_impute_1 <- RN_hear_impute_data%>%filter(hcat_impute==1)
-RN_hear_impute_2 <- RN_hear_impute_data%>%filter(hcat_impute==2)
-RN_hear_impute_3 <- RN_hear_impute_data%>%filter(hcat_impute==3)
-RN_hear_impute_4 <- RN_hear_impute_data%>%filter(hcat_impute==4)
-
-hcat1Q41plot<-Graph_Q41(RN_hear_impute_1)
-hcat1Q41plot + ggtitle("Q41 Normal Hearing Data")+
-geom_text(aes(label=round(hcat1Q41plot$data$Responses,0)),hjust=-.8)
-
-hcat2Q41plot<-Graph_Q41(RN_hear_impute_2)
-hcat2Q41plot + ggtitle("Q41 Mild Hearing Loss Data") +
-geom_text(aes(label=round(hcat2Q41plot$data$Responses,0)),hjust=-.8)
-
-hcat3Q41plot<-Graph_Q41(RN_hear_impute_3)
-hcat3Q41plot + ggtitle("Q41 Moderate Hearing Loss Data") +
-geom_text(aes(label=round(hcat3Q41plot$data$Responses,0)),hjust=-.8)
-
-hcat4Q41plot<-Graph_Q41(RN_hear_impute_4)
-hcat4Q41plot + ggtitle("Q41 Severe Hearing Loss Data") +
-geom_text(aes(label=round(hcat4Q41plot$data$Responses,0)),hjust=-.8)
-
-
-# Plot bar graph by hearing loss type 
-png('HL.png', pointsize=10, width=2000, height=1000, res=300)
-hear1plot<-Graph_Q41(global_NH)
-hear1plot + ggtitle("Normal Hearing") +
-  geom_text(aes(label=round(hear1plot$data$Responses,0)),hjust=-.8)
-dev.off()
-
-png('HLwoAID.png', pointsize=10, width=2000, height=1000, res=300)
-hear2plot<-Graph_Q41(global_HL)
-hear2plot + ggtitle("Hearing loss without hearing aid") +
-  geom_text(aes(label=round(hear2plot$data$Responses,0)),hjust=-.8)
-dev.off()
-
-png('HLwAID.png', pointsize=10, width=2000, height=1000, res=300)
-hear3plot<-Graph_Q41(global_HLHA)
-hear3plot + ggtitle("Hearing loss with hearing aid") +
-  geom_text(aes(label=round(hear3plot$data$Responses,0)),hjust=-.8)
-dev.off()
-
-
-
-
-
-
-
-
 
 ### In Person
 ## By country,age and gender
@@ -1090,14 +984,14 @@ bepta_ip[,4:6] <- global_data %>%group_by(country,q0002) %>% summarise(BEPTA=IQR
 bepta_ip <- bepta_ip[,c(1:3,6)]
 tbepta_ip <- t(bepta_ip)
 
+########################################################################################################
+# in person demographic tables 
 
-
-
-test <- table(global_data$country,global_data$q0002)
-addmargins(test)
+table(global_data$country,global_data$q0002)
 
 table(global_data$country,global_data$q0003)
 
+table(global_data$country,global_data$q0003,global_data$q0002)
 
 ### Research Now - Online
 
@@ -1112,13 +1006,361 @@ table(global_data$region_id,global_data$q0003)
 table(global_data$state_id,global_data$q0003)
 table(global_data$city_id,global_data$q0003)
 
+
+table(global_data$country,global_data$q0003,global_data$q0002)
+
+table(all_RN_data$country,all_RN_data$q0003,all_RN_data$q0002)
+
 test <- table(all_RN_data$q0046)
 addmargins(test)
 
-all_RN_data$q0041 <- rowSums(all_RN_data[92:105],na.rm=TRUE)
+all_RN_data$q0041 <- rowSums(all_RN_data[142:205],na.rm=TRUE)
 test <- table(all_RN_data$q0041)
 addmargins(test)
 
-global_data$q0041 <- rowSums(global_data[92:105],na.rm=TRUE)
+global_data$q0041 <- rowSums(global_data[142:205],na.rm=TRUE)
 test <- table(global_data$q0041)
+addmargins(test)
+
+
+##############################################################################
+##Fadwa
+## online RN total
+
+test <- table(all_RN_data$q0002)
+addmargins(test)
+
+
+AUS_RN <- all_RN_data[all_RN_data$country=="AUS",]
+CAN_RN <- all_RN_data[all_RN_data$country=="CAN",]
+US_RN <- all_RN_data[all_RN_data$country=="US",]
+UK_RN <- all_RN_data[all_RN_data$country=="UK",]
+
+#Table of online age and gender 
+test <- table(AUS_RN$q0002,AUS_RN$q0003)
+addmargins(test)
+
+test <- table(CAN_RN$q0002,CAN_RN$q0003)
+addmargins(test)
+
+test <- table(UK_RN$q0002,UK_RN$q0003)
+addmargins(test)
+
+test <- table(US_RN$q0002,US_RN$q0003)
+addmargins(test)
+
+test <- table(all_RN_data$q0002,all_RN_data$q0003)
+addmargins(test)
+
+table(all_RN_data$country,all_RN_data$q0003,all_RN_data$q0002)
+
+#Table of online only gender 
+
+
+test <- table(CAN_RN$q0002)
+addmargins(test)
+
+
+## Online Filter by subjects who responded to Q41
+
+all_RN_data$q0041 <- rowSums(all_RN_data[142:205],na.rm=TRUE)
+all_RN_dataQ41 <- all_RN_data[all_RN_data$q0041!=0,]
+AUS_dataQ41 <- all_RN_dataQ41[all_RN_dataQ41$country=="AUS",]
+CAN_dataQ41 <- all_RN_dataQ41[all_RN_dataQ41$country=="CAN",]
+US_dataQ41 <- all_RN_dataQ41[all_RN_dataQ41$country=="US",]
+UK_dataQ41 <- all_RN_dataQ41[all_RN_dataQ41$country=="UK",]
+
+test <- table(AUS_dataQ41$q0002,AUS_dataQ41$q0003)
+addmargins(test)
+
+test <- table(CAN_dataQ41$q0002,CAN_dataQ41$q0003)
+addmargins(test)
+
+test <- table(UK_dataQ41$q0002,UK_dataQ41$q0003)
+addmargins(test)
+
+test <- table(US_dataQ41$q0002,US_dataQ41$q0003)
+addmargins(test)
+
+test <- table(all_RN_dataQ41$country,all_RN_dataQ41$q0003,all_RN_dataQ41$q0002)
+addmargins(test)
+
+
+
+
+#in general who responded to Q41
+CAN_RN_data$q0041 <- rowSums(CAN_RN_data[138:201],na.rm=TRUE)
+test <- table(CAN_RN_data$q0041)
+addmargins(test)
+
+#########################################
+##In Person 
+
+
+#Filter out subjects who did not respond to Q41
+global_data$q0041 <- rowSums(global_data[142:205],na.rm=TRUE)
+global_dataQ41 <- global_data[global_data$q0041!=0,]
+AUS_dataQ41 <- global_dataQ41[global_dataQ41$country=="AUS",]
+CAN_dataQ41 <- global_dataQ41[global_dataQ41$country=="CAN",]
+US_dataQ41 <- global_dataQ41[global_dataQ41$country=="US",]
+UK_dataQ41 <- global_dataQ41[global_dataQ41$country=="UK",]
+
+test <- table(AUS_dataQ41$q0002,AUS_dataQ41$q0003)
+addmargins(test)
+
+test <- table(CAN_dataQ41$q0002,CAN_dataQ41$q0003)
+addmargins(test)
+
+test <- table(UK_dataQ41$q0002,UK_dataQ41$q0003)
+addmargins(test)
+
+test <- table(US_dataQ41$q0002,US_dataQ41$q0003)
+addmargins(test)
+
+test <- table(global_dataQ41$country,global_dataQ41$q0003,global_dataQ41$q0002)
+addmargins(test)
+
+
+
+# In Person demographic tables
+
+table(global_data$country,global_data$q0002)
+
+table(global_data$country,global_data$q0003,global_data$q0002)
+
+table(global_dataQ41$country,global_dataQ41$q0003,global_dataQ41$q0002)
+
+###In person classified by gender, country and age group
+
+test <- table(global_data$country,global_data$q0002,global_data$q0003)
+addmargins(test)
+
+table(global_data$country,global_data$q0002)
+table(global_data$state_id,global_data$q0002)
+table(global_data$region_id,global_data$q0002)
+table(global_data$city_id,global_data$q0002)
+
+
+table(global_data$country,global_data$q0003)
+table(global_data$region_id,global_data$q0003)
+table(global_data$state_id,global_data$q0003)
+table(global_data$city_id,global_data$q0003)
+
+
+global_data$q0041 <- rowSums(global_data[142:205],na.rm=TRUE)
+test <- table(global_data$q0041, global_data$q0002)
+addmargins(test)
+
+test <- table(global_data$BEPTA)
+addmargins(test)
+
+
+## BEPTA By country,age and gender filtered for Q41
+
+bepta_ip41<- global_dataQ41 %>%
+  group_by(country,q0003,q0002) %>% 
+  summarise(BEPTA=median(BEPTA,na.rm=TRUE))
+bepta_ip41[,5:8] <- global_dataQ41 %>%
+  group_by(country,q0003,q0002) %>% 
+  summarise(BEPTA_IQR=IQR(BEPTA,na.rm=TRUE))
+global_dataQ41 %>%
+  group_by(country,q0003) %>% 
+  summarise(BEPTA_IQR=IQR(BEPTA,na.rm=TRUE))
+beptaQ_ip41 <- bepta_ip41[,c(1:4,8)]
+tbepta_ip41 <- t(bepta_ip41)
+write.table(beptaQ_ip41, file = "beptaQ_ipLevels.txt", sep = ",", quote = FALSE, row.names = F)
+
+
+
+## BEPTA By country,age and gender NOT filtered for Q41
+
+bepta_ip<- global_data %>%
+  group_by(country,q0003,q0002) %>% 
+  summarise(BEPTA=median(BEPTA,na.rm=TRUE))
+bepta_ip[,5:8] <- global_data %>%
+  group_by(country,q0003,q0002) %>% 
+  summarise(BEPTA_IQR=IQR(BEPTA,na.rm=TRUE))
+global_data %>%
+  group_by(country,q0003) %>% 
+  summarise(BEPTA_IQR=IQR(BEPTA,na.rm=TRUE))
+beptaQ_ip <- bepta_ip[,c(1:4,8)]
+tbepta_ip <- t(bepta_ip)
+write.table(beptaQ_ip, file = "beptaQ_ipLevels.txt", sep = ",", quote = FALSE, row.names = F)
+
+
+#############
+## Meeting with catherine 19Nov2020
+
+##looking at q0042: Do you have a hearing problem now. Making it so we pick up yes/no responses 
+#AUS_data$q0042[is.na(AUS_data$q0042)] <- 0
+##Making Labels for q0042 table
+#AUS_FA_tableq0042 <- table(AUS_data$q0042,AUS_data$hcat)
+#AUS_FA_tableq0042 <- as.matrix(tableq0042)
+#row.names(AUS_FA_tableq0042)<-c('Yes','No')
+#colnames(AUS_FA_tableq0042) <-c('Normal','Mild','Moderate','Severe')
+
+
+##looking at q0042: Do you have a hearing problem now. Making it so we pick up yes/no responses 
+test <- table(AUS_data$q0042,AUS_data$q0043)
+addmargins(test)
+
+
+#looking at q0041: Where would you prefer to get information about hearing health care? Check all that apply. Making it so we pick up yes/no responses 
+AUS_data$Q41_1 <- AUS_data$q0041_0001
+AUS_data$Q41_1[is.na(AUS_data$Q41_1)] <- 0
+#Making Labels for Q41_1 table
+AUS_tableQ41_1 <- table(AUS_data$Q41_1,AUS_data$hcat)
+AUS_tableQ41_1 <- as.matrix(tableQ41_1)
+row.names(AUS_tableQ41_1)<-c('Did Not Select','Selected')
+colnames(AUS_tableQ41_1) <-c('Normal','Mild','Moderate','Severe')
+
+##############
+##Categorizing Q43 into groups (hearing difficulty)
+AUS_data$q0043_0001 <- gsub(pattern = "1", replacement = "1", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "2", replacement = "1", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "3", replacement = "2", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "4", replacement = "2", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "5", replacement = "2", AUS_data$q0043_0001, fixed = TRUE)
+
+##Renaming the column
+AUS_data$HearingDifficulty <- AUS_data$q0043_0001
+
+##looking at q0042VSQ43: Do you have a hearing problem now. Making it so we pick up yes/no responses (Columns are HD and rows are Q42)
+test <- table(AUS_data$q0042,AUS_data$HearingDifficulty)
+addmargins(test)
+
+
+##Categorizing Q49 in groups
+AUS_data <-seq(203:210)
+
+
+######
+#####Looking at different countries individually 
+
+###looking at q0042 and Q43: Do you have a hearing problem now. Making it so we pick up yes/no responses 
+
+# AUS_data 
+##Categorizing Q43 into groups (hearing difficulty)
+AUS_data$q0043_0001 <- gsub(pattern = "1", replacement = "1", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "2", replacement = "1", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "3", replacement = "2", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "4", replacement = "2", AUS_data$q0043_0001, fixed = TRUE)
+AUS_data$q0043_0001 <- gsub(pattern = "5", replacement = "2", AUS_data$q0043_0001, fixed = TRUE)
+
+##Renaming the column
+AUS_data$HearingDifficulty <- AUS_data$q0043_0001
+
+##looking at q0042VSQ43: Do you have a hearing problem now. Making it so we pick up yes/no responses (Columns are HD and rows are Q42)
+test <- table(AUS_data$q0042,AUS_data$HearingDifficulty)
+addmargins(test)
+
+#Convert hcat into categories of HL and no HL... So for the lables: 1= below 25, 2 is from 25- 55 and greater?
+data$hcat <- factor(data$hcat,levels=c(1:4),ordered=TRUE)
+AUS_data$hcat <- gsub(pattern = "1", replacement = "1", AUS_data$hcat, fixed = TRUE)
+AUS_data$hcat <- gsub(pattern = "2", replacement = "2", AUS_data$hcat, fixed = TRUE)
+AUS_data$hcat <- gsub(pattern = "3", replacement = "2", AUS_data$hcat, fixed = TRUE)
+AUS_data$hcat <- gsub(pattern = "4", replacement = "2", AUS_data$hcat, fixed = TRUE)
+
+##Looking at HL groups versus Hearing difficulty groups (columns are hearing difficulty and rows are hcat)
+test <- table(AUS_data$hcat, AUS_data$HearingDifficulty)
+addmargins(test)
+
+## CAN_data
+#Categorizing Q43 into groups (hearing difficulty)
+CAN_data$q0043_0001 <- gsub(pattern = "1", replacement = "1", CAN_data$q0043_0001, fixed = TRUE)
+CAN_data$q0043_0001 <- gsub(pattern = "2", replacement = "1", CAN_data$q0043_0001, fixed = TRUE)
+CAN_data$q0043_0001 <- gsub(pattern = "3", replacement = "2", CAN_data$q0043_0001, fixed = TRUE)
+CAN_data$q0043_0001 <- gsub(pattern = "4", replacement = "2", CAN_data$q0043_0001, fixed = TRUE)
+CAN_data$q0043_0001 <- gsub(pattern = "5", replacement = "2", CAN_data$q0043_0001, fixed = TRUE)
+
+##Renaming the column
+CAN_data$HearingDifficulty <- CAN_data$q0043_0001
+
+##looking at q0042VSQ43: Do you have a hearing problem now. Making it so we pick up yes/no responses (Columns are HD and rows are Q42)
+test <- table(CAN_data$q0042,CAN_data$HearingDifficulty)
+addmargins(test)
+
+
+data$hcat <- factor(data$hcat,levels=c(1:4),ordered=TRUE)
+CAN_data$hcat <- gsub(pattern = "1", replacement = "1", CAN_data$hcat, fixed = TRUE)
+CAN_data$hcat <- gsub(pattern = "2", replacement = "2", CAN_data$hcat, fixed = TRUE)
+CAN_data$hcat <- gsub(pattern = "3", replacement = "2", CAN_data$hcat, fixed = TRUE)
+CAN_data$hcat <- gsub(pattern = "4", replacement = "2", CAN_data$hcat, fixed = TRUE)
+
+test <- table(CAN_data$hcat, CAN_data$HearingDifficulty)
+addmargins(test)
+
+## UK_data
+#Categorizing Q43 into groups (hearing difficulty)
+UK_data$q0043_0001 <- gsub(pattern = "1", replacement = "1", UK_data$q0043_0001, fixed = TRUE)
+UK_data$q0043_0001 <- gsub(pattern = "2", replacement = "1", UK_data$q0043_0001, fixed = TRUE)
+UK_data$q0043_0001 <- gsub(pattern = "3", replacement = "2", UK_data$q0043_0001, fixed = TRUE)
+UK_data$q0043_0001 <- gsub(pattern = "4", replacement = "2", UK_data$q0043_0001, fixed = TRUE)
+UK_data$q0043_0001 <- gsub(pattern = "5", replacement = "2", UK_data$q0043_0001, fixed = TRUE)
+
+##Renaming the column
+UK_data$HearingDifficulty <- UK_data$q0043_0001
+
+##looking at q0042VSQ43: Do you have a hearing problem now. Making it so we pick up yes/no responses (Columns are HD and rows are Q42)
+test <- table(UK_data$q0042,UK_data$HearingDifficulty)
+addmargins(test)
+
+
+data$hcat <- factor(data$hcat,levels=c(1:4),ordered=TRUE)
+UK_data$hcat <- gsub(pattern = "1", replacement = "1", UK_data$hcat, fixed = TRUE)
+UK_data$hcat <- gsub(pattern = "2", replacement = "2", UK_data$hcat, fixed = TRUE)
+UK_data$hcat <- gsub(pattern = "3", replacement = "2", UK_data$hcat, fixed = TRUE)
+UK_data$hcat <- gsub(pattern = "4", replacement = "2", UK_data$hcat, fixed = TRUE)
+
+test <- table(UK_data$hcat, UK_data$HearingDifficulty)
+addmargins(test)
+
+## US_data
+#Categorizing Q43 into groups (hearing difficulty)
+US_data$q0043_0001 <- gsub(pattern = "1", replacement = "1", US_data$q0043_0001, fixed = TRUE)
+US_data$q0043_0001 <- gsub(pattern = "2", replacement = "1", US_data$q0043_0001, fixed = TRUE)
+US_data$q0043_0001 <- gsub(pattern = "3", replacement = "2", US_data$q0043_0001, fixed = TRUE)
+US_data$q0043_0001 <- gsub(pattern = "4", replacement = "2", US_data$q0043_0001, fixed = TRUE)
+US_data$q0043_0001 <- gsub(pattern = "5", replacement = "2", US_data$q0043_0001, fixed = TRUE)
+
+##Renaming the column
+US_data$HearingDifficulty <- US_data$q0043_0001
+
+##looking at q0042VSQ43: Do you have a hearing problem now. Making it so we pick up yes/no responses (Columns are HD and rows are Q42)
+test <- table(US_data$q0042,US_data$HearingDifficulty)
+addmargins(test)
+
+
+data$hcat <- factor(data$hcat,levels=c(1:4),ordered=TRUE)
+US_data$hcat <- gsub(pattern = "1", replacement = "1", US_data$hcat, fixed = TRUE)
+US_data$hcat <- gsub(pattern = "2", replacement = "2", US_data$hcat, fixed = TRUE)
+US_data$hcat <- gsub(pattern = "3", replacement = "2", US_data$hcat, fixed = TRUE)
+US_data$hcat <- gsub(pattern = "4", replacement = "2", US_data$hcat, fixed = TRUE)
+
+test <- table(US_data$hcat, US_data$HearingDifficulty)
+addmargins(test)
+
+## global_data
+#Categorizing Q43 into groups (hearing difficulty)
+global_data$q0043_0001 <- gsub(pattern = "1", replacement = "1", global_data$q0043_0001, fixed = TRUE)
+global_data$q0043_0001 <- gsub(pattern = "2", replacement = "1", global_data$q0043_0001, fixed = TRUE)
+global_data$q0043_0001 <- gsub(pattern = "3", replacement = "2", global_data$q0043_0001, fixed = TRUE)
+global_data$q0043_0001 <- gsub(pattern = "4", replacement = "2", global_data$q0043_0001, fixed = TRUE)
+global_data$q0043_0001 <- gsub(pattern = "5", replacement = "2", global_data$q0043_0001, fixed = TRUE)
+
+##Renaming the column
+global_data$HearingDifficulty <- global_data$q0043_0001
+
+##looking at q0042VSQ43: Do you have a hearing problem now. Making it so we pick up yes/no responses (Columns are HD and rows are Q42)
+test <- table(global_data$q0042,global_data$HearingDifficulty)
+addmargins(test)
+
+
+data$hcat <- factor(data$hcat,levels=c(1:4),ordered=TRUE)
+global_data$hcat <- gsub(pattern = "1", replacement = "1", global_data$hcat, fixed = TRUE)
+global_data$hcat <- gsub(pattern = "2", replacement = "2", global_data$hcat, fixed = TRUE)
+global_data$hcat <- gsub(pattern = "3", replacement = "2", global_data$hcat, fixed = TRUE)
+global_data$hcat <- gsub(pattern = "4", replacement = "2", global_data$hcat, fixed = TRUE)
+
+test <- table(global_data$hcat, global_data$HearingDifficulty)
 addmargins(test)
